@@ -1,1 +1,1 @@
-web: cmd/server/server
+web: ./bin/server
