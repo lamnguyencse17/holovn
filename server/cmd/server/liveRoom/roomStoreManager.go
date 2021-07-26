@@ -5,22 +5,25 @@ import (
 	"server/cmd/server/event"
 )
 
-func ManageRoom(event chan event.ChannelEvent){
+func ManageRoom(event chan event.ChannelEvent) {
 	for {
 		select {
-		case channelEvent := <- event:
+		case channelEvent := <-event:
 			log.Println("FOUND EVENT")
 			switchRoomEvent(channelEvent)
-		default: continue
+		default:
+			continue
+		}
 	}
-}
 }
 
-func switchRoomEvent(event event.ChannelEvent){
+func switchRoomEvent(event event.ChannelEvent) {
 	switch event.Type {
-	case "LEAVE_ALL": {
-		LeaveAllRoom(event.Data.Socket)
-	}
+	case "LEAVE_ALL":
+		{
+			LeaveAllRoom(event.Data.Socket)
+			removeEmptyRoom()
+		}
 	case "JOIN":
 		{
 			channelExist := DoesRoomExist(event.Data.LiveId)
