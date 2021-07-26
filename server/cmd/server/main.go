@@ -17,6 +17,7 @@ func initGin(quit chan bool){
 
 func main() {
 	event.InitStore()
+	liveRoom.InitRoomStore()
 	liveChannel := make(chan event.ChannelEvent)
 	ginChannel := make(chan bool)
 	go initGin(ginChannel)

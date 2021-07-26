@@ -1,6 +1,7 @@
 package liveRoom
 
 import (
+	"log"
 	"server/cmd/server/event"
 )
 
@@ -8,6 +9,7 @@ func ManageRoom(event chan event.ChannelEvent){
 	for {
 		select {
 		case channelEvent := <- event:
+			log.Println("FOUND EVENT")
 			switchRoomEvent(channelEvent)
 		default: continue
 	}
@@ -16,12 +18,15 @@ func ManageRoom(event chan event.ChannelEvent){
 
 func switchRoomEvent(event event.ChannelEvent){
 	switch event.Type {
+	case "LEAVE_ALL": {
+		LeaveAllRoom(event.Data.Socket)
+	}
 	case "JOIN":
 		{
 			channelExist := DoesRoomExist(event.Data.LiveId)
 			if !channelExist {
-				newRoomStore, newRoom := CreateRoom(event.Data.LiveId, event.Data.Socket)
-				Room.ReplaceRoom(newRoomStore)
+				newRoom := CreateRoom(event.Data.LiveId, event.Data.Socket)
+				AddRoom(newRoom)
 				go pollRoom(newRoom)
 				return
 			}

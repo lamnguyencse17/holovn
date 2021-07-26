@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	"server/cmd/server/event"
 )
 
 var wsUpgrader = websocket.Upgrader{
@@ -26,6 +27,7 @@ func HandleWS(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
+	defer handleDisconnection(conn)
 	for {
 		var payloadEvent wsPayloadEvent
 		_, rawPayload, _ := conn.ReadMessage()
@@ -35,6 +37,15 @@ func HandleWS(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		switchEvent(conn, payloadEvent.Event, rawPayload)
-		//conn.WriteJSON(payload)
 	}
+}
+
+func handleDisconnection (conn *websocket.Conn){
+	var channelEvent event.ChannelEvent
+	var channelEventData event.ChannelEventData
+	channelEventData.LiveId = "ALL"
+	channelEventData.Socket = conn
+	channelEvent.Type = "LEAVE_ALL"
+	channelEvent.Data = channelEventData
+	event.WriteEvent(channelEvent)
 }
