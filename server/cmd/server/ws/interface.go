@@ -6,7 +6,15 @@ type message struct {
 	Message     string `json:"message"`
 }
 
-type wsPayload struct {
+type wsPayloadEvent struct {
 	Event string `json:"event"`
-	Data map[string]interface{} `json:"data"`
+}
+
+type wsJoinPayload struct {
+	Event string `json:"event"`
+	Data joinData `json:"data"`
+}
+
+type joinData struct {
+	LiveId string `json:"liveId"`
 }

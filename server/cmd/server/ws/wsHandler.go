@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"encoding/json"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -26,12 +27,14 @@ func HandleWS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	for {
-		var payload wsPayload
-		err := conn.ReadJSON(&payload)
+		var payloadEvent wsPayloadEvent
+		_, rawPayload, _ := conn.ReadMessage()
+		err = json.Unmarshal(rawPayload, &payloadEvent)
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		conn.WriteJSON(payload)
+		switchEvent(conn, payloadEvent.Event, rawPayload)
+		//conn.WriteJSON(payload)
 	}
 }
