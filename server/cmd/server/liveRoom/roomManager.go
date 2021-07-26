@@ -2,13 +2,14 @@ package liveRoom
 
 import (
 	"log"
+	"strconv"
 	"time"
 )
 
 func pollRoom (roomData RoomData){
-	for range time.Tick(time.Millisecond * 5000) {
+	for range time.Tick(time.Millisecond * 15000) {
 		limit := 10
-		if roomData.LastGet == 0 {
+		if roomData.LastChat == 0 {
 			limit = 10000
 		}
 		chatData, err := GetTl(roomData.Name, limit)
@@ -17,13 +18,11 @@ func pollRoom (roomData RoomData){
 			log.Println(err)
 			continue
 		}
-		roomData, err = GetRoom(roomData.Name)
-		if err != nil{
-			log.Println("GET ROOM ERROR")
-			log.Println(err)
-			continue
+		newestTimeStamp, _ := strconv.ParseInt(chatData[0].Timestamp, 10, 64)
+		if roomData.LastChat < newestTimeStamp {
+			roomData = UpdateLastChatInRoom(roomData.Name, newestTimeStamp)
+			announceNewData(roomData, chatData)
 		}
-		announceNewData(roomData, chatData)
 	}
 }
 

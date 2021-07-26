@@ -10,7 +10,7 @@ import (
 func runGinRouter(router *gin.Engine){
 	router.GET("/live/:live_id", func(c *gin.Context) {
 		liveId := c.Param("live_id")
-		result, err := liveRoom.GetTl(liveId, 10)
+		result, err := liveRoom.GetTl(liveId, 10000)
 		if err != nil {
 			c.String(http.StatusBadRequest, "Request cannot be handle")
 			return

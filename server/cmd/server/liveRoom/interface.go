@@ -6,7 +6,7 @@ type RoomData struct {
 	Name string
 	Connections int
 	sockets []*websocket.Conn
-	LastGet int64
+	LastChat int64
 }
 
 type updateChatData struct {

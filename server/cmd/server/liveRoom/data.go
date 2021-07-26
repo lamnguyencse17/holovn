@@ -19,3 +19,17 @@ func (roomStore *RoomStore) ReplaceRoom(newRoomStore []RoomData){
 	roomStore.store = newRoomStore
 	roomStore.mu.Unlock()
 }
+
+func UpdateLastChatInRoom(name string, lastChat int64) RoomData{
+	var updatedRoom RoomData
+	Room.mu.Lock()
+	for roomIndex, room := range Room.store{
+		if room.Name == name{
+			Room.store[roomIndex].LastChat = lastChat
+			updatedRoom = Room.store[roomIndex]
+			break
+		}
+	}
+	Room.mu.Unlock()
+	return updatedRoom
+}
