@@ -3,13 +3,14 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"server/cmd/server/liveRoom"
 	"server/cmd/server/ws"
 )
 
 func runGinRouter(router *gin.Engine){
 	router.GET("/live/:live_id", func(c *gin.Context) {
 		liveId := c.Param("live_id")
-		result, err := getTl(liveId)
+		result, err := liveRoom.GetTl(liveId, 10)
 		if err != nil {
 			c.String(http.StatusBadRequest, "Request cannot be handle")
 			return

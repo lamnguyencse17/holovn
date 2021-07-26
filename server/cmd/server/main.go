@@ -21,6 +21,6 @@ func main() {
 	ginChannel := make(chan bool)
 	go initGin(ginChannel)
 	go event.PollEvents(liveChannel)
-	go liveRoom.ManageChannel(liveChannel)
+	go liveRoom.ManageRoom(liveChannel)
 	<- ginChannel
 }

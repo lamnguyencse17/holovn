@@ -23,7 +23,7 @@ func (eventStore *EventStore) DrainEvent() []ChannelEvent{
 	var drainedStore []ChannelEvent
 	eventStore.mu.Lock()
 	drainedStore = Store.store
-	Store.store = make([]ChannelEvent, 0)
+	eventStore.store = make([]ChannelEvent, 0)
 	eventStore.mu.Unlock()
 	return drainedStore
 }

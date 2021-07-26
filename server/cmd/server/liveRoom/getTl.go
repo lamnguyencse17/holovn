@@ -1,4 +1,4 @@
-package main
+package liveRoom
 
 import (
 	"encoding/json"
@@ -8,26 +8,24 @@ import (
 )
 
 const requestPrefix = "https://holodex.net/api/v2/videos/"
-const requestPostfix = "/chats?lang=en&verified=1&moderator=1&limit=10000"
+const requestPostfix = "/chats?lang=en&verified=1&moderator=1&limit="
 
-func getTl(liveId string) ([]chatData, error){
+func GetTl(liveId string, limit int) ([]ChatData, error){
 	client := http.DefaultClient
-	requestUrl := requestPrefix + liveId + requestPostfix
+	requestUrl := requestPrefix + liveId + requestPostfix + string(rune(limit))
 	resp, err := client.Get(requestUrl)
-	var parsedBody []chatData
+	var parsedBody []ChatData
 	if err != nil {
-		log.Println(err)
 		return parsedBody, err
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
 	if err != nil {
-		log.Println(err)
 		return parsedBody, err
 	}
 	err = json.Unmarshal(body, &parsedBody)
+	log.Println(parsedBody)
 	if err != nil {
-		log.Println(err)
 		return parsedBody, err
 	}
 	return parsedBody, nil
