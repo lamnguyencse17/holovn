@@ -81,3 +81,14 @@ func removeEmptyRoom() {
 	}
 	Room.mu.Unlock()
 }
+
+func JoinRoom(name string, conn *websocket.Conn) bool {
+	Room.mu.Lock()
+	if thisRoom, ok := Room.store[name]; ok {
+		thisRoom.sockets = append(Room.store[name].sockets, conn)
+		thisRoom.Connections++
+		Room.mu.Unlock()
+		return true
+	}
+	return false
+}
