@@ -48,6 +48,7 @@ func LeaveAllRoom(conn *websocket.Conn) {
 				newSockets = append(newSockets, socket)
 			}
 		}
+		roomData.Connections--
 		newRoom := Room.store[name]
 		newRoom.sockets = newSockets
 		Room.store[name] = newRoom
