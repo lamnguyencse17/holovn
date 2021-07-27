@@ -48,6 +48,7 @@ func LeaveAllRoom(conn *websocket.Conn) {
 				newSockets = append(newSockets, socket)
 			}
 		}
+		roomData.Connections = roomData.Connections - 1
 		newRoom := Room.store[name]
 		newRoom.sockets = newSockets
 		Room.store[name] = newRoom
@@ -80,4 +81,15 @@ func removeEmptyRoom() {
 		}
 	}
 	Room.mu.Unlock()
+}
+
+func JoinRoom(name string, conn *websocket.Conn) bool {
+	Room.mu.Lock()
+	if thisRoom, ok := Room.store[name]; ok {
+		thisRoom.sockets = append(Room.store[name].sockets, conn)
+		thisRoom.Connections = thisRoom.Connections + 1
+		Room.mu.Unlock()
+		return true
+	}
+	return false
 }

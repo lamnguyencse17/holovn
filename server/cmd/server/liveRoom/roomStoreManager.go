@@ -33,11 +33,11 @@ func switchRoomEvent(event event.ChannelEvent) {
 				go pollRoom(newRoom)
 				return
 			}
-			//joinResult := JoinRoom(event.Data.LiveId, event.Data.Socket)
-			//if !joinResult {
-			//	CreateRoom(event.Data.LiveId, event.Data.Socket)
-			//	return
-			//}
+			joinResult := JoinRoom(event.Data.LiveId, event.Data.Socket)
+			if !joinResult {
+				CreateRoom(event.Data.LiveId, event.Data.Socket)
+				return
+			}
 		}
 	}
 }
