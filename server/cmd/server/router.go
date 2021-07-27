@@ -7,7 +7,7 @@ import (
 	"server/cmd/server/ws"
 )
 
-func runGinRouter(router *gin.Engine){
+func runGinRouter(router *gin.Engine) {
 	router.GET("/live/:live_id", func(c *gin.Context) {
 		liveId := c.Param("live_id")
 		result, err := liveRoom.GetTl(liveId, 10000)
@@ -17,7 +17,7 @@ func runGinRouter(router *gin.Engine){
 		}
 		c.JSON(http.StatusOK, result)
 	})
-	router.GET("/ws", func (c* gin.Context){
+	router.GET("/ws", func(c *gin.Context) {
 		ws.HandleWS(c.Writer, c.Request)
 	})
 }

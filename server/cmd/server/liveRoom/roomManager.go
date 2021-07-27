@@ -6,10 +6,10 @@ import (
 	"time"
 )
 
-func pollRoom (roomData RoomData){
+func pollRoom(roomData RoomData) {
 	defer log.Println("NOT LONGER EXIST")
 	for range time.Tick(time.Second * 20) {
-		if !DoesRoomExist(roomData.Name){
+		if !DoesRoomExist(roomData.Name) {
 			return
 		}
 		log.Println("POLLING ROOMS")
@@ -26,7 +26,7 @@ func pollRoom (roomData RoomData){
 		newestTimeStamp, _ := strconv.ParseInt(chatData[len(chatData)-1].Timestamp, 10, 64)
 		if roomData.LastChat < newestTimeStamp {
 			filteredChatData := chatData
-			if limit != 10000{
+			if limit != 10000 {
 				filteredChatData = filterChatData(chatData, roomData.LastChat)
 			}
 			roomData = UpdateRoomLastChat(roomData.Name, newestTimeStamp)
@@ -35,10 +35,10 @@ func pollRoom (roomData RoomData){
 	}
 }
 
-func announceNewData (roomData RoomData, chatData []ChatData){
+func announceNewData(roomData RoomData, chatData []ChatData) {
 	var newChatData updateChatData
 	newChatData.NewChat = chatData
-	for _, socket := range roomData.sockets{
+	for _, socket := range roomData.sockets {
 		err := socket.WriteJSON(newChatData)
 		if err != nil {
 			log.Println("SEND DATA ERROR")
@@ -48,10 +48,10 @@ func announceNewData (roomData RoomData, chatData []ChatData){
 	}
 }
 
-func filterChatData (chatData []ChatData, timestamp int64) (filteredChatData []ChatData){
-	for _, chat := range chatData{
+func filterChatData(chatData []ChatData, timestamp int64) (filteredChatData []ChatData) {
+	for _, chat := range chatData {
 		chatTimestamp, _ := strconv.ParseInt(chat.Timestamp, 10, 64)
-		if chatTimestamp > timestamp{
+		if chatTimestamp > timestamp {
 			filteredChatData = append(filteredChatData, chat)
 		}
 	}

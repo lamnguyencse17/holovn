@@ -8,8 +8,8 @@ import (
 )
 
 type IRoomStore struct {
-	mu    sync.Mutex
-	store map[string]RoomData
+	mu        sync.Mutex
+	store     map[string]RoomData
 	emptyRoom []string
 }
 
@@ -53,7 +53,6 @@ func LeaveAllRoom(conn *websocket.Conn) {
 		Room.store[name] = newRoom
 		log.Println(Room.store[name].sockets)
 	}
-
 	Room.mu.Unlock()
 }
 
@@ -72,7 +71,7 @@ func UpdateRoomLastChat(name string, lastChat int64) RoomData {
 	return selectedRoom
 }
 
-func removeEmptyRoom(){
+func removeEmptyRoom() {
 	Room.mu.Lock()
 	for _, room := range Room.store {
 		if len(room.sockets) == 0 {

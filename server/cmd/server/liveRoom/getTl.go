@@ -11,7 +11,7 @@ import (
 const requestPrefix = "https://holodex.net/api/v2/videos/"
 const requestPostfix = "/chats?lang=en&verified=1&moderator=1&limit="
 
-func GetTl(liveId string, limit int) ([]ChatData, error){
+func GetTl(liveId string, limit int) ([]ChatData, error) {
 	client := http.DefaultClient
 	requestUrl := requestPrefix + liveId + requestPostfix + strconv.Itoa(limit)
 	log.Println(requestUrl)

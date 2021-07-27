@@ -6,7 +6,7 @@ import (
 	"server/cmd/server/liveRoom"
 )
 
-func initGin(quit chan bool){
+func initGin(quit chan bool) {
 	r := gin.Default()
 	runGinRouter(r)
 	err := r.Run()
@@ -23,5 +23,5 @@ func main() {
 	go initGin(ginChannel)
 	go event.PollEvents(liveChannel)
 	go liveRoom.ManageRoom(liveChannel)
-	<- ginChannel
+	<-ginChannel
 }

@@ -3,10 +3,10 @@ package liveRoom
 import "github.com/gorilla/websocket"
 
 type RoomData struct {
-	Name string
+	Name        string
 	Connections int
-	sockets []*websocket.Conn
-	LastChat int64
+	sockets     []*websocket.Conn
+	LastChat    int64
 }
 
 type updateChatData struct {
