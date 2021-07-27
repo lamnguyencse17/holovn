@@ -7,7 +7,11 @@ import (
 )
 
 func pollRoom (roomData RoomData){
+	defer log.Println("NOT LONGER EXIST")
 	for range time.Tick(time.Second * 20) {
+		if !DoesRoomExist(roomData.Name){
+			return
+		}
 		log.Println("POLLING ROOMS")
 		limit := 10
 		if roomData.LastChat == 0 {

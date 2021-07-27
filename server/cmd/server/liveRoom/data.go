@@ -10,12 +10,13 @@ import (
 type IRoomStore struct {
 	mu    sync.Mutex
 	store map[string]RoomData
+	emptyRoom []string
 }
 
 var Room IRoomStore
 
 func InitRoomStore() {
-	Room = IRoomStore{store: make(map[string]RoomData)}
+	Room = IRoomStore{store: make(map[string]RoomData), emptyRoom: make([]string, 0)}
 }
 
 func RemoveRoom(name string) {
@@ -71,15 +72,13 @@ func UpdateRoomLastChat(name string, lastChat int64) RoomData {
 	return selectedRoom
 }
 
-func removeEmptyRoom() []string {
+func removeEmptyRoom(){
 	Room.mu.Lock()
-	var emptyRoom []string
 	for _, room := range Room.store {
 		if len(room.sockets) == 0 {
-			emptyRoom = append(emptyRoom, room.Name)
+			Room.emptyRoom = append(Room.emptyRoom, room.Name)
 			removeRoomWithoutMutex(room.Name)
 		}
 	}
 	Room.mu.Unlock()
-	return emptyRoom
 }
