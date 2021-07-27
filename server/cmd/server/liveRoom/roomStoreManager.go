@@ -21,8 +21,11 @@ func switchRoomEvent(event event.ChannelEvent) {
 	switch event.Type {
 	case "LEAVE_ALL":
 		{
+			log.Println("Helloooo", Room)
 			LeaveAllRoom(event.Data.Socket)
 			removeEmptyRoom()
+			log.Println("Room after disconnect", Room)
+
 		}
 	case "JOIN":
 		{

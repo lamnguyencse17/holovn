@@ -24,6 +24,10 @@ func RemoveRoom(name string) {
 	Room.mu.Unlock()
 }
 
+func removeRoomWithoutMutex(name string) {
+	delete(Room.store, name)
+}
+
 func DoesRoomExist(name string) bool {
 	Room.mu.Lock()
 	if _, ok := Room.store[name]; ok {
@@ -70,13 +74,13 @@ func UpdateRoomLastChat(name string, lastChat int64) RoomData {
 func removeEmptyRoom() []string {
 	Room.mu.Lock()
 	var emptyRoom []string
-
 	for _, room := range Room.store {
 		if len(room.sockets) == 0 {
 			emptyRoom = append(emptyRoom, room.Name)
-			RemoveRoom(room.Name)
+			removeRoomWithoutMutex(room.Name)
 		}
 	}
 	Room.mu.Unlock()
+
 	return emptyRoom
 }
