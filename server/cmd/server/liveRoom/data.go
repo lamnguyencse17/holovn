@@ -81,6 +81,5 @@ func removeEmptyRoom() []string {
 		}
 	}
 	Room.mu.Unlock()
-
 	return emptyRoom
 }
