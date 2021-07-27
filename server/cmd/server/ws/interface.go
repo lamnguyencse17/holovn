@@ -1,6 +1,5 @@
 package ws
 
-
 type message struct {
 	MessageType string `json:"type"`
 	Message     string `json:"message"`
@@ -11,8 +10,8 @@ type wsPayloadEvent struct {
 }
 
 type wsJoinPayload struct {
-	Event string `json:"event"`
-	Data joinData `json:"data"`
+	Event string   `json:"event"`
+	Data  joinData `json:"data"`
 }
 
 type joinData struct {

@@ -7,12 +7,12 @@ import (
 	"server/cmd/server/event"
 )
 
-func switchEvent(conn *websocket.Conn, eventName string, rawPayload []byte){
+func switchEvent(conn *websocket.Conn, eventName string, rawPayload []byte) {
 	switch eventName {
 	case "JOIN":
 		var joinPayload wsJoinPayload
 		err := json.Unmarshal(rawPayload, &joinPayload)
-		if err != nil{
+		if err != nil {
 			log.Println(err)
 			return
 		}

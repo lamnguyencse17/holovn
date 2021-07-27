@@ -40,7 +40,7 @@ func HandleWS(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleDisconnection (conn *websocket.Conn){
+func handleDisconnection(conn *websocket.Conn) {
 	var channelEvent event.ChannelEvent
 	var channelEventData event.ChannelEventData
 	channelEventData.LiveId = "ALL"
