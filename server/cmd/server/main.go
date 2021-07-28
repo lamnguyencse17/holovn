@@ -16,6 +16,7 @@ func initGin(quit chan bool) {
 }
 
 func main() {
+	initRedisClient()
 	event.InitStore()
 	liveRoom.InitRoomStore()
 	liveChannel := make(chan event.ChannelEvent)
