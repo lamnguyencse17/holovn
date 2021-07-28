@@ -9,7 +9,9 @@ import (
 func ReadEnv(key string) string {
 	if os.Getenv("PRODUCTION") == "TRUE"{
 		value := os.Getenv(key)
-		log.Fatalln(key, " NOT FOUND IN ENV")
+		if value == "" {
+			log.Fatalln(key, " NOT FOUND IN ENV")
+		}
 		return value
 	}
 	viper.SetConfigFile("./cmd/server/.env")
