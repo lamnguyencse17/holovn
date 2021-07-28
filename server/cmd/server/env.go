@@ -5,8 +5,8 @@ import (
 	"log"
 )
 
-func readEnv(key string) string {
-	viper.SetConfigFile(".env")
+func ReadEnv(key string) string {
+	viper.SetConfigFile("./cmd/server/.env")
 	err := viper.ReadInConfig()
 	if err != nil {
 		log.Printf("Error while reading config file %s\n", err)
