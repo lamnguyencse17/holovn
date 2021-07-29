@@ -1,3 +1,4 @@
 cmd/server/.env
 .docker_build/
 bin/
+cmd/.idea
