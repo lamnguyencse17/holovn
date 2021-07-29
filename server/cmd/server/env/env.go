@@ -1,4 +1,4 @@
-package main
+package env
 
 import (
 	"github.com/spf13/viper"

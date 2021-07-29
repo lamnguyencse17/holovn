@@ -6,13 +6,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
+	"server/cmd/server/env"
 	"time"
 )
 
 var mongoClient *mongo.Client
 
 func initMongoDb(){
-	uri := main.ReadEnv("MongoUri")
+	uri := env.ReadEnv("MongoUri")
 	if uri == ""{
 		log.Fatalln("MongoDB URI is not defined")
 	}
