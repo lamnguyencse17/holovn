@@ -2,6 +2,7 @@ package liveRoom
 
 import (
 	"log"
+	"server/cmd/server/models/translation"
 	"strconv"
 	"time"
 )
@@ -15,6 +16,7 @@ func pollRoom(roomData RoomData) {
 		log.Println("POLLING ROOMS")
 		limit := 10
 		if roomData.LastChat == 0 {
+			translation.CreateTranslation(roomData.Name)
 			limit = 10000
 		}
 		chatData, err := GetTl(roomData.Name, limit)
@@ -31,6 +33,7 @@ func pollRoom(roomData RoomData) {
 			}
 			roomData = UpdateRoomLastChat(roomData.Name, newestTimeStamp)
 			announceNewData(roomData, filteredChatData)
+			translation.InsertToTranslationStore(roomData.Name, filteredChatData)
 		}
 	}
 }

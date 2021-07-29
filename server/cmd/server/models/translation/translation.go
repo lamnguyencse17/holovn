@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"server/cmd/server/env"
 	"server/cmd/server/liveRoom"
 	"server/cmd/server/models"
 	"time"
@@ -18,7 +19,8 @@ type ITranslationStore struct {
 	LastUpdated  primitive.DateTime  `bson:"last_updated,omitempty"`
 }
 
-var translationCollection = models.GetMongoClient().Database("holovn").Collection("translations")
+var database = env.ReadEnv("DatabaseName")
+var translationCollection = models.GetMongoClient().Database(database).Collection("translations")
 
 func CreateTranslation(liveId string) {
 	initialTranslationStore := ITranslationStore{LiveId: liveId, Translations: make([]liveRoom.ChatData, 0)}
