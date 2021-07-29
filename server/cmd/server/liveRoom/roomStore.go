@@ -75,10 +75,10 @@ func UpdateRoomLastChat(name string, lastChat int64) room.RoomData {
 
 func removeEmptyRoom() {
 	Room.mu.Lock()
-	for _, room := range Room.store {
-		if len(room.Sockets) == 0 {
-			Room.emptyRoom = append(Room.emptyRoom, room.Name)
-			removeRoomWithoutMutex(room.Name)
+	for _, roomData := range Room.store {
+		if len(roomData.Sockets) == 0 {
+			Room.emptyRoom = append(Room.emptyRoom, roomData.Name)
+			removeRoomWithoutMutex(roomData.Name)
 		}
 	}
 	Room.mu.Unlock()
