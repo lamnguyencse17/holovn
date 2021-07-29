@@ -2,7 +2,7 @@ package liveRoom
 
 import (
 	"log"
-	"server/cmd/server/event"
+	"server/cmd/server/structure/event"
 )
 
 func ManageRoom(event chan event.ChannelEvent) {

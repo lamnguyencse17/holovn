@@ -1,4 +1,4 @@
-package structure
+package translation
 
 type TranslationData struct {
 	Name      string `json:"name"`

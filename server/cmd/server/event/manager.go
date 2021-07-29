@@ -2,10 +2,11 @@ package event
 
 import (
 	"log"
+	"server/cmd/server/structure/event"
 	"time"
 )
 
-func PollEvents(liveChannel chan ChannelEvent) {
+func PollEvents(liveChannel chan event.ChannelEvent) {
 	for range time.Tick(time.Millisecond * 100) {
 		drainedStore := Store.DrainEvent()
 		if len(drainedStore) != 0 {
@@ -17,6 +18,6 @@ func PollEvents(liveChannel chan ChannelEvent) {
 	}
 }
 
-func WriteEvent(event ChannelEvent) {
+func WriteEvent(event event.ChannelEvent) {
 	Store.AddEvent(event)
 }

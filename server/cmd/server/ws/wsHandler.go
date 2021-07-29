@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"server/cmd/server/event"
+	event2 "server/cmd/server/structure/event"
 )
 
 var wsUpgrader = websocket.Upgrader{
@@ -41,8 +42,8 @@ func HandleWS(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleDisconnection(conn *websocket.Conn) {
-	var channelEvent event.ChannelEvent
-	var channelEventData event.ChannelEventData
+	var channelEvent event2.ChannelEvent
+	var channelEventData event2.ChannelEventData
 	channelEventData.LiveId = "ALL"
 	channelEventData.Socket = conn
 	channelEvent.Type = "LEAVE_ALL"

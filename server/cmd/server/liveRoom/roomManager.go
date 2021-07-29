@@ -3,12 +3,13 @@ package liveRoom
 import (
 	"log"
 	"server/cmd/server/models/translation"
-	"server/cmd/server/structure"
+	"server/cmd/server/structure/room"
+	translation2 "server/cmd/server/structure/translation"
 	"strconv"
 	"time"
 )
 
-func pollRoom(roomData RoomData) {
+func pollRoom(roomData room.RoomData) {
 	defer log.Println("NOT LONGER EXIST")
 	for range time.Tick(time.Second * 20) {
 		if !DoesRoomExist(roomData.Name) {
@@ -16,7 +17,7 @@ func pollRoom(roomData RoomData) {
 		}
 		log.Println("POLLING ROOMS")
 		limit := 10
-		if roomData.LastChat == 0 {
+		if roomData.LastTranslation == 0 {
 			translation.CreateTranslation(roomData.Name)
 			limit = 10000
 		}
@@ -27,10 +28,10 @@ func pollRoom(roomData RoomData) {
 			continue
 		}
 		newestTimeStamp, _ := strconv.ParseInt(chatData[len(chatData)-1].Timestamp, 10, 64)
-		if roomData.LastChat < newestTimeStamp {
+		if roomData.LastTranslation < newestTimeStamp {
 			filteredChatData := chatData
 			if limit != 10000 {
-				filteredChatData = filterChatData(chatData, roomData.LastChat)
+				filteredChatData = filterChatData(chatData, roomData.LastTranslation)
 			}
 			roomData = UpdateRoomLastChat(roomData.Name, newestTimeStamp)
 			announceNewData(roomData, filteredChatData)
@@ -39,10 +40,10 @@ func pollRoom(roomData RoomData) {
 	}
 }
 
-func announceNewData(roomData RoomData, chatData []structure.TranslationData) {
-	var newChatData updateChatData
-	newChatData.NewChat = chatData
-	for _, socket := range roomData.sockets {
+func announceNewData(roomData room.RoomData, chatData []translation2.TranslationData) {
+	var newChatData room.UpdateTranslationData
+	newChatData.NewTranslation = chatData
+	for _, socket := range roomData.Sockets {
 		err := socket.WriteJSON(newChatData)
 		if err != nil {
 			log.Println("SEND DATA ERROR")
@@ -52,7 +53,7 @@ func announceNewData(roomData RoomData, chatData []structure.TranslationData) {
 	}
 }
 
-func filterChatData(chatData []structure.TranslationData, timestamp int64) (filteredChatData []structure.TranslationData) {
+func filterChatData(chatData []translation2.TranslationData, timestamp int64) (filteredChatData []translation2.TranslationData) {
 	for _, chat := range chatData {
 		chatTimestamp, _ := strconv.ParseInt(chat.Timestamp, 10, 64)
 		if chatTimestamp > timestamp {

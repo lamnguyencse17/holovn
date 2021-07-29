@@ -8,22 +8,22 @@ import (
 	"log"
 	"server/cmd/server/env"
 	"server/cmd/server/models"
-	"server/cmd/server/structure"
+	"server/cmd/server/structure/translation"
 	"time"
 )
 
 type ITranslationStore struct {
-	ID           primitive.ObjectID  `bson:"_id,omitempty"`
-	LiveId       string  `bson:"liveId,omitempty"`
-	Translations []structure.TranslationData `bson:"translations,omitempty"`
-	LastUpdated  primitive.DateTime  `bson:"last_updated,omitempty"`
+	ID           primitive.ObjectID            `bson:"_id,omitempty"`
+	LiveId       string                        `bson:"liveId,omitempty"`
+	Translations []translation.TranslationData `bson:"translations,omitempty"`
+	LastUpdated  primitive.DateTime            `bson:"last_updated,omitempty"`
 }
 
 var database = env.ReadEnv("DatabaseName")
 var translationCollection = models.GetMongoClient().Database(database).Collection("translations")
 
 func CreateTranslation(liveId string) {
-	initialTranslationStore := ITranslationStore{LiveId: liveId, Translations: make([]structure.TranslationData, 0)}
+	initialTranslationStore := ITranslationStore{LiveId: liveId, Translations: make([]translation.TranslationData, 0)}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	translationResult, err := translationCollection.InsertOne(ctx, initialTranslationStore)
@@ -34,7 +34,7 @@ func CreateTranslation(liveId string) {
 	log.Println(translationResult)
 }
 
-func InsertToTranslationStore(liveId string, translations []structure.TranslationData) {
+func InsertToTranslationStore(liveId string, translations []translation.TranslationData) {
 	opts := options.Update()
 	updateFilter := bson.D{{"liveId", liveId}}
 	updateOperation := bson.D{{"$push", bson.D{{"translations", bson.D{{"$each", translations}}}}}, {"$set", bson.D{{"LastUpdate", time.Now()}}}}

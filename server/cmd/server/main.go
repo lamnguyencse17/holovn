@@ -6,6 +6,7 @@ import (
 	"server/cmd/server/liveRoom"
 	"server/cmd/server/models"
 	"server/cmd/server/redis"
+	event2 "server/cmd/server/structure/event"
 )
 
 func initGin(quit chan bool) {
@@ -26,7 +27,7 @@ func main() {
 	//translation.InsertToTranslationStore("Hallo", test)
 	event.InitStore()
 	liveRoom.InitRoomStore()
-	liveChannel := make(chan event.ChannelEvent)
+	liveChannel := make(chan event2.ChannelEvent)
 	ginChannel := make(chan bool)
 	go initGin(ginChannel)
 	go event.PollEvents(liveChannel)

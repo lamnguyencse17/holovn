@@ -5,19 +5,19 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"server/cmd/server/structure"
+	"server/cmd/server/structure/translation"
 	"strconv"
 )
 
 const requestPrefix = "https://holodex.net/api/v2/videos/"
 const requestPostfix = "/chats?lang=en&verified=1&moderator=1&limit="
 
-func GetTl(liveId string, limit int) ([]structure.TranslationData, error) {
+func GetTl(liveId string, limit int) ([]translation.TranslationData, error) {
 	client := http.DefaultClient
 	requestUrl := requestPrefix + liveId + requestPostfix + strconv.Itoa(limit)
 	log.Println(requestUrl)
 	resp, err := client.Get(requestUrl)
-	var parsedBody []structure.TranslationData
+	var parsedBody []translation.TranslationData
 	if err != nil {
 		return parsedBody, err
 	}
