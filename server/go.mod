@@ -11,5 +11,6 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/spf13/viper v1.8.1
 	github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77 // indirect
+	go.mongodb.org/mongo-driver v1.7.0
 	go.opentelemetry.io/otel v0.20.0 // indirect
 )

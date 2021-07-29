@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/cmd/server/event"
 	"server/cmd/server/liveRoom"
+	"server/cmd/server/models"
 )
 
 func initGin(quit chan bool) {
@@ -17,6 +18,7 @@ func initGin(quit chan bool) {
 
 func main() {
 	initRedisClient()
+	models.initMongoDb()
 	event.InitStore()
 	liveRoom.InitRoomStore()
 	liveChannel := make(chan event.ChannelEvent)
