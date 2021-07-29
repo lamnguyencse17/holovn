@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -12,9 +13,9 @@ import (
 
 var mongoClient *mongo.Client
 
-func InitMongoDb(){
+func InitMongoDb() {
 	uri := env.ReadEnv("MongoUri")
-	if uri == ""{
+	if uri == "" {
 		log.Fatalln("MongoDB URI is not defined")
 	}
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
@@ -22,6 +23,7 @@ func InitMongoDb(){
 		log.Fatal(err)
 	}
 	ctx, cancelFunc := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancelFunc()
 	err = client.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
@@ -32,11 +34,22 @@ func InitMongoDb(){
 	}
 	log.Println("MONGODB CONNECTED")
 	mongoClient = client
-	cancelFunc()
+	CreateTranslationStoreIndex()
 }
 
-func GetMongoClient () *mongo.Client {
-	if mongoClient == nil{
+func CreateTranslationStoreIndex() {
+	translationCollection := mongoClient.Database("holovn").Collection("translations")
+	_, err := translationCollection.Indexes().CreateOne(context.Background(), mongo.IndexModel{
+		Keys:    bson.D{{Key: "liveId", Value: 1}},
+		Options: options.Index().SetUnique(true),
+	})
+	if err != nil {
+		log.Panicln(err)
+	}
+}
+
+func GetMongoClient() *mongo.Client {
+	if mongoClient == nil {
 		InitMongoDb()
 	}
 	return mongoClient
