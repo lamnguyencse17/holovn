@@ -7,15 +7,15 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"server/cmd/server/env"
-	"server/cmd/server/liveRoom"
 	"server/cmd/server/models"
+	"server/cmd/server/structure"
 	"time"
 )
 
 type ITranslationStore struct {
 	ID           primitive.ObjectID  `bson:"_id,omitempty"`
 	LiveId       string  `bson:"liveId,omitempty"`
-	Translations []liveRoom.ChatData `bson:"translations,omitempty"`
+	Translations []structure.TranslationData `bson:"translations,omitempty"`
 	LastUpdated  primitive.DateTime  `bson:"last_updated,omitempty"`
 }
 
@@ -23,7 +23,7 @@ var database = env.ReadEnv("DatabaseName")
 var translationCollection = models.GetMongoClient().Database(database).Collection("translations")
 
 func CreateTranslation(liveId string) {
-	initialTranslationStore := ITranslationStore{LiveId: liveId, Translations: make([]liveRoom.ChatData, 0)}
+	initialTranslationStore := ITranslationStore{LiveId: liveId, Translations: make([]structure.TranslationData, 0)}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	translationResult, err := translationCollection.InsertOne(ctx, initialTranslationStore)
@@ -34,7 +34,7 @@ func CreateTranslation(liveId string) {
 	log.Println(translationResult)
 }
 
-func InsertToTranslationStore(liveId string, translations []liveRoom.ChatData) {
+func InsertToTranslationStore(liveId string, translations []structure.TranslationData) {
 	opts := options.Update()
 	updateFilter := bson.D{{"liveId", liveId}}
 	updateOperation := bson.D{{"$push", bson.D{{"translations", bson.D{{"$each", translations}}}}}, {"$set", bson.D{{"LastUpdate", time.Now()}}}}

@@ -3,6 +3,7 @@ package liveRoom
 import (
 	"log"
 	"server/cmd/server/models/translation"
+	"server/cmd/server/structure"
 	"strconv"
 	"time"
 )
@@ -38,7 +39,7 @@ func pollRoom(roomData RoomData) {
 	}
 }
 
-func announceNewData(roomData RoomData, chatData []ChatData) {
+func announceNewData(roomData RoomData, chatData []structure.TranslationData) {
 	var newChatData updateChatData
 	newChatData.NewChat = chatData
 	for _, socket := range roomData.sockets {
@@ -51,7 +52,7 @@ func announceNewData(roomData RoomData, chatData []ChatData) {
 	}
 }
 
-func filterChatData(chatData []ChatData, timestamp int64) (filteredChatData []ChatData) {
+func filterChatData(chatData []structure.TranslationData, timestamp int64) (filteredChatData []structure.TranslationData) {
 	for _, chat := range chatData {
 		chatTimestamp, _ := strconv.ParseInt(chat.Timestamp, 10, 64)
 		if chatTimestamp > timestamp {

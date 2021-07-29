@@ -1,6 +1,9 @@
 package liveRoom
 
-import "github.com/gorilla/websocket"
+import (
+	"github.com/gorilla/websocket"
+	"server/cmd/server/structure"
+)
 
 type RoomData struct {
 	Name        string
@@ -10,12 +13,12 @@ type RoomData struct {
 }
 
 type updateChatData struct {
-	NewChat []ChatData `json:"newChat"`
+	NewChat []structure.TranslationData `json:"newChat"`
 }
-
-type ChatData struct {
-	Name      string `json:"name"`
-	Timestamp string `json:"timestamp"`
-	Message   string `json:"message"`
-	IsTl      bool   `json:"is_tl"`
-}
+//
+//type ChatData struct {
+//	Name      string `json:"name"`
+//	Timestamp string `json:"timestamp"`
+//	Message   string `json:"message"`
+//	IsTl      bool   `json:"is_tl"`
+//}
