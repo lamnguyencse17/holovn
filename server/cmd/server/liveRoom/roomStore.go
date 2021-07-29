@@ -2,6 +2,7 @@ package liveRoom
 
 import (
 	"log"
+	"server/cmd/server/structure/room"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -9,14 +10,14 @@ import (
 
 type IRoomStore struct {
 	mu        sync.Mutex
-	store     map[string]RoomData
+	store     map[string]room.RoomData
 	emptyRoom []string
 }
 
 var Room IRoomStore
 
 func InitRoomStore() {
-	Room = IRoomStore{store: make(map[string]RoomData), emptyRoom: make([]string, 0)}
+	Room = IRoomStore{store: make(map[string]room.RoomData), emptyRoom: make([]string, 0)}
 }
 
 func RemoveRoom(name string) {
@@ -43,30 +44,30 @@ func LeaveAllRoom(conn *websocket.Conn) {
 	Room.mu.Lock()
 	for name, roomData := range Room.store {
 		var newSockets []*websocket.Conn
-		for _, socket := range roomData.sockets {
+		for _, socket := range roomData.Sockets {
 			if conn != socket {
 				newSockets = append(newSockets, socket)
 			}
 		}
 		roomData.Connections = roomData.Connections - 1
 		newRoom := Room.store[name]
-		newRoom.sockets = newSockets
+		newRoom.Sockets = newSockets
 		Room.store[name] = newRoom
-		log.Println(Room.store[name].sockets)
+		log.Println(Room.store[name].Sockets)
 	}
 	Room.mu.Unlock()
 }
 
-func AddRoom(roomData RoomData) {
+func AddRoom(roomData room.RoomData) {
 	Room.mu.Lock()
 	Room.store[roomData.Name] = roomData
 	Room.mu.Unlock()
 }
 
-func UpdateRoomLastChat(name string, lastChat int64) RoomData {
+func UpdateRoomLastChat(name string, lastChat int64) room.RoomData {
 	Room.mu.Lock()
 	selectedRoom := Room.store[name]
-	selectedRoom.LastChat = lastChat
+	selectedRoom.LastTranslation = lastChat
 	Room.store[name] = selectedRoom
 	Room.mu.Unlock()
 	return selectedRoom
@@ -74,10 +75,10 @@ func UpdateRoomLastChat(name string, lastChat int64) RoomData {
 
 func removeEmptyRoom() {
 	Room.mu.Lock()
-	for _, room := range Room.store {
-		if len(room.sockets) == 0 {
-			Room.emptyRoom = append(Room.emptyRoom, room.Name)
-			removeRoomWithoutMutex(room.Name)
+	for _, roomData := range Room.store {
+		if len(roomData.Sockets) == 0 {
+			Room.emptyRoom = append(Room.emptyRoom, roomData.Name)
+			removeRoomWithoutMutex(roomData.Name)
 		}
 	}
 	Room.mu.Unlock()
@@ -86,7 +87,7 @@ func removeEmptyRoom() {
 func JoinRoom(name string, conn *websocket.Conn) bool {
 	Room.mu.Lock()
 	if thisRoom, ok := Room.store[name]; ok {
-		thisRoom.sockets = append(Room.store[name].sockets, conn)
+		thisRoom.Sockets = append(Room.store[name].Sockets, conn)
 		thisRoom.Connections = thisRoom.Connections + 1
 		Room.mu.Unlock()
 		return true

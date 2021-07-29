@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"server/cmd/server/event"
+	event2 "server/cmd/server/structure/event"
 )
 
 func switchEvent(conn *websocket.Conn, eventName string, rawPayload []byte) {
@@ -16,8 +17,8 @@ func switchEvent(conn *websocket.Conn, eventName string, rawPayload []byte) {
 			log.Println(err)
 			return
 		}
-		var channelEvent event.ChannelEvent
-		var channelEventData event.ChannelEventData
+		var channelEvent event2.ChannelEvent
+		var channelEventData event2.ChannelEventData
 		channelEventData.LiveId = joinPayload.Data.LiveId
 		channelEventData.Socket = conn
 		channelEvent.Type = "JOIN"

@@ -7,12 +7,11 @@ import (
 	"server/cmd/server/env"
 )
 
-
 var ctx = context.Background()
 
 var rdb *redis.Client
 
-func InitRedisClient (){
+func InitRedisClient() {
 	rdb = redis.NewClient(&redis.Options{
 		Addr:     env.ReadEnv("RedisAddress"),
 		Username: env.ReadEnv("RedisUsername"),
@@ -21,7 +20,7 @@ func InitRedisClient (){
 	})
 }
 
-func SetKeyValue (key string, value string) bool{
+func SetKeyValue(key string, value string) bool {
 	err := rdb.Set(ctx, "key", "value", 0).Err()
 	if err != nil {
 		log.Println(err)
@@ -30,7 +29,7 @@ func SetKeyValue (key string, value string) bool{
 	return true
 }
 
-func GetValue (key string) string{
+func GetValue(key string) string {
 	value, err := rdb.Get(ctx, key).Result()
 	if err == redis.Nil {
 		log.Println(key, " does not exist")
@@ -43,7 +42,7 @@ func GetValue (key string) string{
 	}
 }
 
-func RemoveKey (key string) bool{
+func RemoveKey(key string) bool {
 	err := rdb.Del(ctx, key).Err()
 	if err != nil {
 		log.Println(err)
