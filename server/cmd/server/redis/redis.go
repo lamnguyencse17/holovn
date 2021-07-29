@@ -1,4 +1,4 @@
-package main
+package redis
 
 import (
 	"context"
@@ -12,7 +12,7 @@ var ctx = context.Background()
 
 var rdb *redis.Client
 
-func initRedisClient (){
+func InitRedisClient (){
 	rdb = redis.NewClient(&redis.Options{
 		Addr:     env.ReadEnv("RedisAddress"),
 		Username: env.ReadEnv("RedisUsername"),

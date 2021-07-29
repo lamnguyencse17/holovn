@@ -5,6 +5,7 @@ import (
 	"server/cmd/server/event"
 	"server/cmd/server/liveRoom"
 	"server/cmd/server/models"
+	"server/cmd/server/redis"
 )
 
 func initGin(quit chan bool) {
@@ -17,8 +18,8 @@ func initGin(quit chan bool) {
 }
 
 func main() {
-	initRedisClient()
-	models.initMongoDb()
+	redis.InitRedisClient()
+	models.InitMongoDb()
 	event.InitStore()
 	liveRoom.InitRoomStore()
 	liveChannel := make(chan event.ChannelEvent)

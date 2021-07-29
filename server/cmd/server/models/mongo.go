@@ -12,7 +12,7 @@ import (
 
 var mongoClient *mongo.Client
 
-func initMongoDb(){
+func InitMongoDb(){
 	uri := env.ReadEnv("MongoUri")
 	if uri == ""{
 		log.Fatalln("MongoDB URI is not defined")
@@ -35,9 +35,9 @@ func initMongoDb(){
 	cancelFunc()
 }
 
-func getMongoClient () *mongo.Client {
+func GetMongoClient () *mongo.Client {
 	if mongoClient == nil{
-		initMongoDb()
+		InitMongoDb()
 	}
 	return mongoClient
 }
