@@ -34,6 +34,6 @@ func main() {
 	go initGin(ginChannel)
 	go event.PollEvents(liveChannel)
 	go liveRoom.ManageRoom(liveChannel)
-	go getSchedule("25", 12)
+	go getSchedule()
 	<-ginChannel
 }
