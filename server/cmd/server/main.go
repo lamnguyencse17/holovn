@@ -24,7 +24,7 @@ func loopGetSchedule (){
 	ticker := time.NewTicker(5 * time.Minute)
 
 	for _ = range ticker.C {
-		go getSchedule()
+		getSchedule()
 	}
 }
 
@@ -42,6 +42,6 @@ func main() {
 	go initGin(ginChannel)
 	go event.PollEvents(liveChannel)
 	go liveRoom.ManageRoom(liveChannel)
-	loopGetSchedule()
+	go loopGetSchedule()
 	<-ginChannel
 }
