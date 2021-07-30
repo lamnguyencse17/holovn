@@ -5,8 +5,8 @@ import (
 	"server/cmd/server/liveRoom"
 	"server/cmd/server/models"
 	"server/cmd/server/redis"
-
 	event2 "server/cmd/server/structure/event"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +18,14 @@ func initGin(quit chan bool) {
 	if err != nil {
 		quit <- true
 	} // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+}
+
+func loopGetSchedule (){
+	ticker := time.NewTicker(5 * time.Minute)
+
+	for _ = range ticker.C {
+		go getSchedule()
+	}
 }
 
 func main() {
@@ -34,6 +42,6 @@ func main() {
 	go initGin(ginChannel)
 	go event.PollEvents(liveChannel)
 	go liveRoom.ManageRoom(liveChannel)
-	go getSchedule()
+	loopGetSchedule()
 	<-ginChannel
 }
