@@ -1,12 +1,14 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"server/cmd/server/event"
 	"server/cmd/server/liveRoom"
 	"server/cmd/server/models"
 	"server/cmd/server/redis"
+
 	event2 "server/cmd/server/structure/event"
+
+	"github.com/gin-gonic/gin"
 )
 
 func initGin(quit chan bool) {
@@ -22,10 +24,6 @@ func initGin(quit chan bool) {
 func main() {
 	redis.InitRedisClient()
 	models.InitMongoDb()
-	//translation.CreateTranslation("Hallo")
-	//test := make([]liveRoom.ChatData, 0)
-	//test = append(test, liveRoom.ChatData{Name: "Lam", Timestamp: "1627278673166", Message: "a", IsTl: true})
-	//translation.InsertToTranslationStore("Hallo", test)
 	event.InitStore()
 	liveRoom.InitRoomStore()
 	liveChannel := make(chan event2.ChannelEvent)
