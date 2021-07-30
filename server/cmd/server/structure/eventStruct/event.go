@@ -1,4 +1,4 @@
-package event
+package eventStruct
 
 import "github.com/gorilla/websocket"
 

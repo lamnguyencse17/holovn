@@ -2,10 +2,10 @@ package liveRoom
 
 import (
 	"log"
-	"server/cmd/server/structure/event"
+	"server/cmd/server/structure/eventStruct"
 )
 
-func ManageRoom(event chan event.ChannelEvent) {
+func ManageRoom(event chan eventStruct.ChannelEvent) {
 	for {
 		select {
 		case channelEvent := <-event:
@@ -17,7 +17,7 @@ func ManageRoom(event chan event.ChannelEvent) {
 	}
 }
 
-func switchRoomEvent(event event.ChannelEvent) {
+func switchRoomEvent(event eventStruct.ChannelEvent) {
 	switch event.Type {
 	case "LEAVE_ALL":
 		{

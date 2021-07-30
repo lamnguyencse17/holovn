@@ -5,8 +5,8 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
-	"server/cmd/server/event"
-	event2 "server/cmd/server/structure/event"
+	"server/cmd/server/eventStore"
+	event2 "server/cmd/server/structure/eventStruct"
 )
 
 var wsUpgrader = websocket.Upgrader{
@@ -48,5 +48,5 @@ func handleDisconnection(conn *websocket.Conn) {
 	channelEventData.Socket = conn
 	channelEvent.Type = "LEAVE_ALL"
 	channelEvent.Data = channelEventData
-	event.WriteEvent(channelEvent)
+	eventStore.WriteEvent(channelEvent)
 }

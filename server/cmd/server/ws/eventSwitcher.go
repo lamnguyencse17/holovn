@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"github.com/gorilla/websocket"
 	"log"
-	"server/cmd/server/event"
-	event2 "server/cmd/server/structure/event"
+	"server/cmd/server/eventStore"
+	event2 "server/cmd/server/structure/eventStruct"
 )
 
 func switchEvent(conn *websocket.Conn, eventName string, rawPayload []byte) {
@@ -23,6 +23,6 @@ func switchEvent(conn *websocket.Conn, eventName string, rawPayload []byte) {
 		channelEventData.Socket = conn
 		channelEvent.Type = "JOIN"
 		channelEvent.Data = channelEventData
-		event.WriteEvent(channelEvent)
+		eventStore.WriteEvent(channelEvent)
 	}
 }

@@ -1,14 +1,12 @@
 package main
 
 import (
-	"server/cmd/server/event"
+	"github.com/gin-gonic/gin"
+	"server/cmd/server/eventStore"
 	"server/cmd/server/liveRoom"
 	"server/cmd/server/models"
 	"server/cmd/server/redis"
-
-	event2 "server/cmd/server/structure/event"
-
-	"github.com/gin-gonic/gin"
+	"server/cmd/server/structure/eventStruct"
 )
 
 func initGin(quit chan bool) {
@@ -20,16 +18,15 @@ func initGin(quit chan bool) {
 	} // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
-
 func main() {
 	redis.InitRedisClient()
 	models.InitMongoDb()
-	event.InitStore()
+	eventStore.InitStore()
 	liveRoom.InitRoomStore()
-	liveChannel := make(chan event2.ChannelEvent)
+	liveChannel := make(chan eventStruct.ChannelEvent)
 	ginChannel := make(chan bool)
 	go initGin(ginChannel)
-	go event.PollEvents(liveChannel)
+	go eventStore.PollEvents(liveChannel)
 	go liveRoom.ManageRoom(liveChannel)
 	go loopGetSchedule()
 	<-ginChannel
