@@ -20,13 +20,10 @@ func initGin(quit chan bool) {
 	} // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
+
 func main() {
 	redis.InitRedisClient()
 	models.InitMongoDb()
-	//translation.CreateTranslation("Hallo")
-	//test := make([]liveRoom.ChatData, 0)
-	//test = append(test, liveRoom.ChatData{Name: "Lam", Timestamp: "1627278673166", Message: "a", IsTl: true})
-	//translation.InsertToTranslationStore("Hallo", test)
 	event.InitStore()
 	liveRoom.InitRoomStore()
 	liveChannel := make(chan event2.ChannelEvent)
@@ -34,6 +31,6 @@ func main() {
 	go initGin(ginChannel)
 	go event.PollEvents(liveChannel)
 	go liveRoom.ManageRoom(liveChannel)
-	go getSchedule()
+	go loopGetSchedule()
 	<-ginChannel
 }

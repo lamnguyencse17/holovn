@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"server/cmd/server/env"
 	"server/cmd/server/structure/schedule"
+	"time"
 )
 
 const requestSchedulePrefix = "https://holodex.net/api/v2"
@@ -41,4 +42,12 @@ func getSchedule() ([]schedule.ScheduleData, error){
 	}
 
 	return parsedBody, nil
+}
+
+func loopGetSchedule (){
+	ticker := time.NewTicker(5 * time.Minute)
+
+	for _ = range ticker.C {
+		getSchedule()
+	}
 }
