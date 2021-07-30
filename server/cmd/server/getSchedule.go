@@ -17,9 +17,8 @@ func getSchedule() ([]schedule.ScheduleData, error){
 	client := http.Client{}
 	requestUrl := requestSchedulePrefix + requestSchedulePostfix
 	request , _ := http.NewRequest("GET", requestUrl, nil)
-	request.Header.Set("X-APIKEY", apiKey)
+	request.Header.Set("x-api-key", apiKey)
 	resp, err := client.Do(request)
-
 
 	var parsedBody []schedule.ScheduleData
 
