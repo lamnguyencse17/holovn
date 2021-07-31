@@ -13,10 +13,10 @@ import (
 )
 
 type ITranslationStore struct {
-	ID           primitive.ObjectID            `bson:"_id,omitempty"`
-	LiveId       string                        `bson:"liveId,omitempty"`
-	Translations []translation.TranslationData `bson:"translations,omitempty"`
-	LastUpdated  primitive.DateTime            `bson:"last_updated,omitempty"`
+	ID           primitive.ObjectID            `bson:"_id,omitempty" json:"_id"`
+	LiveId       string                        `bson:"liveId,omitempty" json:"liveId"`
+	Translations []translation.TranslationData `bson:"translations,omitempty" json:"translations"`
+	LastUpdated  primitive.DateTime            `bson:"last_updated,omitempty" json:"lastUpdated"`
 }
 
 var database = env.ReadEnv("DatabaseName")
@@ -51,4 +51,17 @@ func InsertToTranslationStore(liveId string, translations []translation.Translat
 		log.Println("NONE MODIFIED")
 		return
 	}
+}
+
+func GetTranslation(liveId string) (ITranslationStore, error) {
+	var requestedTranslation ITranslationStore
+	ctx, cancelFunction := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancelFunction()
+	filter := bson.D{{"liveId", liveId}}
+	err := translationCollection.FindOne(ctx, filter).Decode(&requestedTranslation)
+	if err != nil {
+		log.Println(err)
+		return requestedTranslation, err
+	}
+	return requestedTranslation, nil
 }
