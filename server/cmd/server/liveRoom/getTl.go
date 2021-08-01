@@ -30,6 +30,6 @@ func GetTl(liveId string, limit int) ([]translation.TranslationData, error) {
 	if err != nil {
 		return parsedBody, err
 	}
-	log.Println("tét", parsedBody)
+
 	return parsedBody, nil
 }
