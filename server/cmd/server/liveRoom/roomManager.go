@@ -48,7 +48,9 @@ func pollRoom(roomData room.RoomData) {
 			}
 			roomData = UpdateRoomLastChat(roomData.Name, newestTimeStamp)
 			announceNewData(roomData, filteredChatData)
-			translation.InsertToTranslationStore(roomData.Name, filteredChatData)
+			if pullingStatus == "" {
+				translation.InsertToTranslationStore(roomData.Name, filteredChatData)
+			}
 		}
 	}
 }
