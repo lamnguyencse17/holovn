@@ -22,10 +22,9 @@ func pollRoom(roomData room.RoomData) {
 			translation.CreateTranslation(roomData.Name)
 			limit = 10000
 		}
-		pullingStatus := redis.GetValue(roomData.Name)
+		pullingStatus := redis.GetValue(roomData.Name + "-pull")
 
 		if pullingStatus == "" {
-			log.Println("Get translation from DB")
 			chatData, err := GetTl(roomData.Name, limit)
 
 			if err != nil {
@@ -33,7 +32,7 @@ func pollRoom(roomData room.RoomData) {
 				log.Println(err)
 				continue
 			}
-			redis.SetKeyValue(roomData.Name, "pulled")
+			redis.SetKeyValue(roomData.Name + "-pull", "pulled")
 			newestTimeStamp, _ := strconv.ParseInt(chatData[len(chatData)-1].Timestamp, 10, 64)
 			if roomData.LastTranslation < newestTimeStamp {
 				filteredChatData := chatData
@@ -44,6 +43,8 @@ func pollRoom(roomData room.RoomData) {
 				announceNewData(roomData, filteredChatData)
 				translation.InsertToTranslationStore(roomData.Name, filteredChatData)
 			}
+		} else {
+			log.Println("Get translation from DB")
 		}
 	}
 }
