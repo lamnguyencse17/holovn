@@ -25,6 +25,7 @@ func pollRoom(roomData room.RoomData) {
 		pullingStatus := redis.GetValue(liveIdPullKey)
 
 		if pullingStatus != "pulled" {
+			log.Println("Get translation from DB")
 			chatData, err := GetTl(roomData.Name, limit)
 
 			if err != nil {
