@@ -24,8 +24,11 @@ func pollRoom(roomData room.RoomData) {
 		}
 		pullingStatus := redis.GetValue(roomData.Name + "-pull")
 
+		var chatData []translation2.TranslationData
+		var err error
+
 		if pullingStatus == "" {
-			chatData, err := GetTl(roomData.Name, limit)
+			chatData, err = GetTl(roomData.Name, limit)
 
 			if err != nil {
 				log.Println("GET TL ERROR")
@@ -33,18 +36,19 @@ func pollRoom(roomData room.RoomData) {
 				continue
 			}
 			redis.SetKeyValue(roomData.Name + "-pull", "pulled")
-			newestTimeStamp, _ := strconv.ParseInt(chatData[len(chatData)-1].Timestamp, 10, 64)
-			if roomData.LastTranslation < newestTimeStamp {
-				filteredChatData := chatData
-				if limit != 10000 {
-					filteredChatData = filterChatData(chatData, roomData.LastTranslation)
-				}
-				roomData = UpdateRoomLastChat(roomData.Name, newestTimeStamp)
-				announceNewData(roomData, filteredChatData)
-				translation.InsertToTranslationStore(roomData.Name, filteredChatData)
-			}
+
 		} else {
 			log.Println("Get translation from DB")
+		}
+		newestTimeStamp, _ := strconv.ParseInt(chatData[len(chatData)-1].Timestamp, 10, 64)
+		if roomData.LastTranslation < newestTimeStamp {
+			filteredChatData := chatData
+			if limit != 10000 {
+				filteredChatData = filterChatData(chatData, roomData.LastTranslation)
+			}
+			roomData = UpdateRoomLastChat(roomData.Name, newestTimeStamp)
+			announceNewData(roomData, filteredChatData)
+			translation.InsertToTranslationStore(roomData.Name, filteredChatData)
 		}
 	}
 }
