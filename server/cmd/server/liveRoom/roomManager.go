@@ -3,6 +3,7 @@ package liveRoom
 import (
 	"log"
 	"server/cmd/server/models/translation"
+	"server/cmd/server/redis"
 	"server/cmd/server/structure/room"
 	translation2 "server/cmd/server/structure/translation"
 	"strconv"
@@ -21,11 +22,23 @@ func pollRoom(roomData room.RoomData) {
 			translation.CreateTranslation(roomData.Name)
 			limit = 10000
 		}
-		chatData, err := GetTl(roomData.Name, limit)
-		if err != nil {
-			log.Println("GET TL ERROR")
-			log.Println(err)
-			continue
+		pullingStatus := redis.GetValue(roomData.Name + "-pull")
+
+		var chatData []translation2.TranslationData
+		var err error
+
+		if pullingStatus == "" {
+			chatData, err = GetTl(roomData.Name, limit)
+
+			if err != nil {
+				log.Println("GET TL ERROR")
+				log.Println(err)
+				continue
+			}
+			redis.SetKeyValue(roomData.Name + "-pull", "pulled")
+
+		} else {
+			log.Println("Get translation from DB")
 		}
 		newestTimeStamp, _ := strconv.ParseInt(chatData[len(chatData)-1].Timestamp, 10, 64)
 		if roomData.LastTranslation < newestTimeStamp {
@@ -35,7 +48,9 @@ func pollRoom(roomData room.RoomData) {
 			}
 			roomData = UpdateRoomLastChat(roomData.Name, newestTimeStamp)
 			announceNewData(roomData, filteredChatData)
-			translation.InsertToTranslationStore(roomData.Name, filteredChatData)
+			if pullingStatus == "" {
+				translation.InsertToTranslationStore(roomData.Name, filteredChatData)
+			}
 		}
 	}
 }
@@ -62,3 +77,5 @@ func filterChatData(chatData []translation2.TranslationData, timestamp int64) (f
 	}
 	return filteredChatData
 }
+
+
