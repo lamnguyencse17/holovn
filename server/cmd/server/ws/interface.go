@@ -6,11 +6,11 @@ type message struct {
 }
 
 type wsPayloadEvent struct {
-	Event string `json:"eventStore"`
+	Event string `json:"event"`
 }
 
 type wsJoinPayload struct {
-	Event string   `json:"eventStore"`
+	Event string   `json:"event"`
 	Data  joinData `json:"data"`
 }
 

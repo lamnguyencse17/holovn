@@ -21,7 +21,7 @@ func InitRedisClient() {
 }
 
 func SetKeyValue(key string, value string) bool {
-	err := rdb.Set(ctx, "key", "value", 0).Err()
+	err := rdb.Set(ctx, key, value, 0).Err()
 	if err != nil {
 		log.Println(err)
 		return false
