@@ -1,4 +1,4 @@
-package translation
+package translationStore
 
 import (
 	"context"
