@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 )
-const liveIdPullKey = "liveId-pull"
+
 func pollRoom(roomData room.RoomData) {
 	defer log.Println("NOT LONGER EXIST")
 	for range time.Tick(time.Second * 20) {
