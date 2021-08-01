@@ -3,12 +3,13 @@ package liveRoom
 import (
 	"log"
 	"server/cmd/server/models/translation"
+	"server/cmd/server/redis"
 	"server/cmd/server/structure/room"
 	translation2 "server/cmd/server/structure/translation"
 	"strconv"
 	"time"
 )
-
+const liveIdPullKey = "liveId-pull"
 func pollRoom(roomData room.RoomData) {
 	defer log.Println("NOT LONGER EXIST")
 	for range time.Tick(time.Second * 20) {
@@ -21,21 +22,27 @@ func pollRoom(roomData room.RoomData) {
 			translation.CreateTranslation(roomData.Name)
 			limit = 10000
 		}
-		chatData, err := GetTl(roomData.Name, limit)
-		if err != nil {
-			log.Println("GET TL ERROR")
-			log.Println(err)
-			continue
-		}
-		newestTimeStamp, _ := strconv.ParseInt(chatData[len(chatData)-1].Timestamp, 10, 64)
-		if roomData.LastTranslation < newestTimeStamp {
-			filteredChatData := chatData
-			if limit != 10000 {
-				filteredChatData = filterChatData(chatData, roomData.LastTranslation)
+		pullingStatus := redis.GetValue(liveIdPullKey)
+
+		if pullingStatus != "pulled" {
+			chatData, err := GetTl(roomData.Name, limit)
+
+			if err != nil {
+				log.Println("GET TL ERROR")
+				log.Println(err)
+				continue
 			}
-			roomData = UpdateRoomLastChat(roomData.Name, newestTimeStamp)
-			announceNewData(roomData, filteredChatData)
-			translation.InsertToTranslationStore(roomData.Name, filteredChatData)
+			redis.SetKeyValue(liveIdPullKey, "pulled")
+			newestTimeStamp, _ := strconv.ParseInt(chatData[len(chatData)-1].Timestamp, 10, 64)
+			if roomData.LastTranslation < newestTimeStamp {
+				filteredChatData := chatData
+				if limit != 10000 {
+					filteredChatData = filterChatData(chatData, roomData.LastTranslation)
+				}
+				roomData = UpdateRoomLastChat(roomData.Name, newestTimeStamp)
+				announceNewData(roomData, filteredChatData)
+				translation.InsertToTranslationStore(roomData.Name, filteredChatData)
+			}
 		}
 	}
 }
@@ -62,3 +69,5 @@ func filterChatData(chatData []translation2.TranslationData, timestamp int64) (f
 	}
 	return filteredChatData
 }
+
+
