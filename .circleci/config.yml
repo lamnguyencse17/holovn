@@ -28,26 +28,24 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - go-mod-v4-{{ checksum "go.sum" }}
+            - go-mod-v4-{{ checksum "./server/go.sum" }}
       - run:
           name: Setup Code Climate test-reporter
-          command:
-            cd server/cmd/server && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
+          command: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter
       - run:
           name: Run Code Climate Before Build
-          command: cd server/cmd/server && ./cc-test-reporter before-build
-      - run:
-          name: Set Packages
-          command: cd server/cmd/server && PACKAGE_NAMES=$(go list ./... | circleci tests split --split-by=timings --timings-type=classname)
+          command: ./cc-test-reporter before-build
       - run:
           name: Test Golang Server
-          command: cd server/cmd/server && gotestsum --junitfile unit-tests.xml -- $PACKAGE_NAMES --rerun-fails -count 2 -- -coverprofile=c.out
+          command: cd server/cmd/server && go test -v -covermode=atomic -coverprofile=coverage.out ./... -coverpkg=./...
+      - run:
+          name: Copy coverage
+          command: cpy ./server/cmd/server/coverage.out ./
       - run:
           name: Run Code Climate
-          command: cd server/cmd/server && ./cc-test-reporter after-build
+          command: ./cc-test-reporter after-build --coverage-input-type gcov --id $CC_TEST_REPORTER_ID coverage.out
       - save_cache:
-          key: go-mod-v4-{{ checksum "go.sum" }}
+          key: go-mod-v4-{{ checksum "./server/go.sum" }}
           paths:
             - "/go/pkg/mod"
       - store_artifacts:
