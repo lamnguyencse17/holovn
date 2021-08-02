@@ -4,14 +4,19 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.16
+    parallelism: 2
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "go.sum" }}
       - run:
           name: Build Golang Server
           command: cd server/cmd/server && go build
-      - run:
-          name: Test run
-          command: ./server/cmd/server/server
+      - save_cache:
+          key: go-mod-v4-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
       - sonarcloud/scan
 
 orbs:
