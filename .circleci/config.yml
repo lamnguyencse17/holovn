@@ -31,9 +31,7 @@ jobs:
             - go-mod-v4-{{ checksum "go.sum" }}
       - run:
           name: Setup Code Climate test-reporter
-          command:
-            cd server/cmd/server && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
+          command: cd server/cmd/server && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
       - run:
           name: Run Code Climate Before Build
           command: cd server/cmd/server && ./cc-test-reporter before-build
