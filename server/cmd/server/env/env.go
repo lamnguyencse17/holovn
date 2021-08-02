@@ -7,14 +7,18 @@ import (
 )
 
 func ReadEnv(key string) string {
-	if os.Getenv("PRODUCTION") == "TRUE" {
+	if os.Getenv("PRODUCTION") == "TRUE" || os.Getenv("TESTING") == "CI" {
 		value := os.Getenv(key)
 		if value == "" {
 			log.Fatalln(key, " NOT FOUND IN ENV")
 		}
 		return value
 	}
-	viper.SetConfigFile("./cmd/server/.env")
+	if os.Getenv("TESTING") == "LOCAL" {
+		viper.SetConfigFile("../.env")
+	} else {
+		viper.SetConfigFile("./cmd/server/.env")
+	}
 	err := viper.ReadInConfig()
 	if err != nil {
 		log.Printf("Error while reading config file %s\n", err)

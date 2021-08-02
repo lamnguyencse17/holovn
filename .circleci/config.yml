@@ -1,0 +1,62 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.16
+    parallelism: 2
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "./server/go.sum" }}
+      - run:
+          name: Build Golang Server
+          command: cd server/cmd/server && go build
+      - save_cache:
+          key: go-mod-v4-{{ checksum "./server/go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - sonarcloud/scan
+  test:
+    environment:
+      CC_TEST_REPORTER_ID: 9ce0182c643aa45e94076cb723f2aaf88285b1b799cde41c0ca2ed67b83a2ffa
+      TEST_RESULTS: /tmp/test-results
+    docker:
+      - image: circleci/golang:1.16
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "./server/go.sum" }}
+      - run:
+          name: Setup Code Climate test-reporter
+          command: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter
+      - run:
+          name: Run Code Climate Before Build
+          command: ./cc-test-reporter before-build
+      - run:
+          name: Test Golang Server
+          command: cd server/cmd/server && gotestsum -- -coverprofile=c.out ./... -coverpkg=./...
+      - run:
+          name: Run Code Climate
+          command: ./cc-test-reporter after-build --coverage-input-type gocov --prefix server/cmd/server --id $CC_TEST_REPORTER_ID  c.out
+      - save_cache:
+          key: go-mod-v4-{{ checksum "./server/go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: raw-test-output
+      - store_test_results:
+          path: /tmp/test-results
+
+orbs:
+  sonarcloud: sonarsource/sonarcloud@1.0.1
+
+workflows:
+  main:
+    jobs:
+      - build:
+          context: SonarCloud
+      - test
