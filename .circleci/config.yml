@@ -30,27 +30,15 @@ jobs:
           keys:
             - go-mod-v4-{{ checksum "./server/go.sum" }}
       - run:
-          name: Setup Code Climate test-reporter
-          command: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter
-      - run:
-          name: Run Code Climate Before Build
-          command: ./cc-test-reporter before-build
-      - run:
           name: Test Golang Server
-          command: cd server/cmd/server && go test -v -covermode=atomic -coverprofile=coverage.out ./... -coverpkg=./...
-      - run:
-          name: Copy coverage
-          command: cp ./server/cmd/server/coverage.out ./
-      - run:
-          name: Validate Copy
-          command: ls .
-      - run:
-          name: Run Code Climate
-          command: ./cc-test-reporter after-build --debug --coverage-input-type gcov --id $CC_TEST_REPORTER_ID ./coverage.out
+          command: cd server/cmd/server && go test -v -covermode=atomic -coverprofile=coverage.txt ./... -coverpkg=./...
       - save_cache:
           key: go-mod-v4-{{ checksum "./server/go.sum" }}
           paths:
             - "/go/pkg/mod"
+      - codecov/upload:
+          path: "./server/cmd/server/coverage.txt"
+          token: $CODECOV_TOKEN
       - store_artifacts:
           path: /tmp/test-results
           destination: raw-test-output
@@ -59,6 +47,7 @@ jobs:
 
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.1
+  codecov: codecov/codecov@1.2.5
 
 workflows:
   main:
