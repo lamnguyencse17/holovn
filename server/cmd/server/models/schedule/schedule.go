@@ -2,7 +2,6 @@ package schedule
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -13,7 +12,7 @@ import (
 
 type ISchedule struct {
 	ID primitive.ObjectID 				`bson:"_id,omitempty" json:"_id"`
-	Schedules []interface{}				`bson:"schedules,omitempty" json:"schedules"`
+	Schedules []schedule.ScheduleData			`bson:"schedules,omitempty" json:"schedules"`
 	LastUpdated primitive.DateTime 		`bson:"last_updated,omitempty" json:"last_updated"`
 }
 
@@ -25,13 +24,10 @@ func CreateSchedule(schedules []schedule.ScheduleData){
 	insertFilter := make([]interface{}, 0)
 
 	for _, v := range schedules {
-		insertFilter = append(insertFilter, bson.D{{"schedule", v}})
+		insertFilter = append(insertFilter,v)
 	}
 
 	opts := options.InsertMany().SetOrdered(false)
-
-
-
 	result, err := scheduleCollection.InsertMany(context.TODO(),  insertFilter,opts)
 
 	if err!=nil {
