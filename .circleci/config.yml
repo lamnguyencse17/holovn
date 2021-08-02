@@ -37,13 +37,7 @@ jobs:
           paths:
             - "/go/pkg/mod"
       - codecov/upload:
-          path: "./server/cmd/server/coverage.txt"
-          token: $CODECOV_TOKEN
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: raw-test-output
-      - store_test_results:
-          path: /tmp/test-results
+          file: "./server/cmd/server/coverage.txt"
 
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.1
