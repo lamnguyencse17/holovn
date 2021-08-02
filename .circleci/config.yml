@@ -28,7 +28,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - go-mod-v4-{{ checksum "go.sum" }}
+            - go-mod-v4-{{ checksum "./server/go.sum" }}
       - run:
           name: Setup Code Climate test-reporter
           command: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter
@@ -40,9 +40,9 @@ jobs:
           command: cd server/cmd/server && gotestsum -- -coverprofile=c.out ./... -coverpkg=./...
       - run:
           name: Run Code Climate
-          command: ./cc-test-reporter after-build --coverage-input-type gocov --id $CC_TEST_REPORTER_ID ./server/cmd/server/c.out
+          command: ./cc-test-reporter after-build --coverage-input-type gocov --id $CC_TEST_REPORTER_ID --prefix ./server/cmd/server c.out
       - save_cache:
-          key: go-mod-v4-{{ checksum "go.sum" }}
+          key: go-mod-v4-{{ checksum "./server/go.sum" }}
           paths:
             - "/go/pkg/mod"
       - store_artifacts:
