@@ -23,9 +23,9 @@ var database = env.ReadEnv("DatabaseName")
 var scheduleCollection = models.GetMongoClient().Database(database).Collection("schedules")
 
 func CreateIndex(){
-	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 
-
+	defer cancel()
 	mod := mongo.IndexModel{
 		Keys: bson.M{
 			"scheduleId": 1,
@@ -37,7 +37,6 @@ func CreateIndex(){
 }
 
 func CreateSchedule(schedules []schedule.ScheduleData){
-	log.Println(schedules)
 	insertFilter := make([]interface{}, 0)
 
 	for _, v := range schedules {
