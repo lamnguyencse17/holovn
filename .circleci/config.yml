@@ -40,7 +40,7 @@ jobs:
           command: cd server/cmd/server && go test -v -covermode=atomic -coverprofile=coverage.out ./... -coverpkg=./...
       - run:
           name: Copy coverage
-          command: cpy ./server/cmd/server/coverage.out ./
+          command: cp ./server/cmd/server/coverage.out ./
       - run:
           name: Run Code Climate
           command: ./cc-test-reporter after-build --coverage-input-type gcov --id $CC_TEST_REPORTER_ID coverage.out
