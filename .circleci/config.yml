@@ -46,7 +46,7 @@ jobs:
           command: ls .
       - run:
           name: Run Code Climate
-          command: ./cc-test-reporter after-build --debug --coverage-input-type gcov --id $CC_TEST_REPORTER_ID coverage.out
+          command: ./cc-test-reporter after-build --debug --coverage-input-type gcov --id $CC_TEST_REPORTER_ID ./coverage.out
       - save_cache:
           key: go-mod-v4-{{ checksum "./server/go.sum" }}
           paths:
