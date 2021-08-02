@@ -6,12 +6,13 @@ import (
 	"server/cmd/server/liveRoom"
 	"server/cmd/server/models"
 	"server/cmd/server/redis"
+	"server/cmd/server/routers"
 	"server/cmd/server/structure/eventStruct"
 )
 
 func initGin(quit chan bool) {
 	r := gin.Default()
-	runGinRouter(r)
+	routers.RunGinRouter(r)
 	err := r.Run()
 	if err != nil {
 		quit <- true
