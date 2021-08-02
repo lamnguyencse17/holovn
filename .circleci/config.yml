@@ -29,24 +29,21 @@ jobs:
       - restore_cache:
           keys:
             - go-mod-v4-{{ checksum "./server/go.sum" }}
-      - run:
-          name: Setup Code Climate test-reporter
-          command: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter
+      # - run:
+      #     name: Setup Code Climate test-reporter
+      #     command: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter
       - run:
           name: Run Code Climate Before Build
-          command: ./cc-test-reporter before-build
+          command: cc-test-reporter before-build
       - run:
           name: Test Golang Server
           command: cd server/cmd/server && gotestsum -- -coverprofile=c.out ./... -coverpkg=./...
       - run:
           name: Test file
-          command: cd server/cmd/server && ls .
-      - run:
-          name: Test file
-          command: cd server && ls .
+          command: ls .
       - run:
           name: Run Code Climate
-          command: ./cc-test-reporter after-build --coverage-input-type gocov --id $CC_TEST_REPORTER_ID --prefix ./server/cmd/server c.out
+          command: cc-test-reporter after-build --coverage-input-type gocov --id $CC_TEST_REPORTER_ID --prefix /server/cmd/server c.out
       - save_cache:
           key: go-mod-v4-{{ checksum "./server/go.sum" }}
           paths:
@@ -59,6 +56,7 @@ jobs:
 
 orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.1
+  code-climate: socialtables/code-climate@0.2.1
 
 workflows:
   main:
