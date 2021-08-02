@@ -8,10 +8,10 @@ jobs:
       - checkout
       - run:
           name: Build Golang Server
-          command: cd server && go install -v -mod=vendor server/cmd/server
+          command: cd server/cmd/server && go build
       - run:
           name: Test run
-          command: cd server && ./bin/server
+          command: ./server/cmd/server/server
       - sonarcloud/scan
 
 orbs:
