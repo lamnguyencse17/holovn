@@ -40,7 +40,7 @@ jobs:
           command: cd server/cmd/server && PACKAGE_NAMES=$(go list ./... | circleci tests split --split-by=timings --timings-type=classname)
       - run:
           name: Test Golang Server
-          command: cd server/cmd/server && gotestsum --rerun-fails -count 2 -- -coverprofile=c.out ./... -coverpkg=./...
+          command: cd server/cmd/server && gotestsum -- -coverprofile=c.out ./... -coverpkg=./...
       - run:
           name: Run Code Climate
           command: cd server/cmd/server && ./cc-test-reporter after-build --input-type gocov c.out
