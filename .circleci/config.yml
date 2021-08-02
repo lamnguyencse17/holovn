@@ -39,6 +39,12 @@ jobs:
           name: Test Golang Server
           command: cd server/cmd/server && gotestsum -- -coverprofile=c.out ./... -coverpkg=./...
       - run:
+          name: Test file
+          command: cd server/cmd/server && ls .
+      - run:
+          name: Test file
+          command: cd server && ls .
+      - run:
           name: Run Code Climate
           command: ./cc-test-reporter after-build --coverage-input-type gocov --id $CC_TEST_REPORTER_ID --prefix ./server/cmd/server c.out
       - save_cache:
