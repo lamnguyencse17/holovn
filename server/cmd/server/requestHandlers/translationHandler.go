@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"server/cmd/server/constants"
 	"server/cmd/server/models/translationStore"
 	"server/cmd/server/redis"
 )
@@ -17,7 +18,7 @@ func HandleGetTranslation(c *gin.Context) {
 		err := json.Unmarshal([]byte(unparsedTranslation), &translations)
 		if err != nil {
 			log.Println(err)
-			c.String(http.StatusBadRequest, "Request cannot be handled")
+			c.String(http.StatusBadRequest, constants.ERROR_HANDLING)
 			return
 		}
 		c.JSON(http.StatusOK, translations)
@@ -30,12 +31,12 @@ func HandleGetTranslation(c *gin.Context) {
 	stringifiedResult, err := json.Marshal(result)
 	if err != nil {
 		log.Println(err)
-		c.String(http.StatusBadRequest, "Request cannot be handled")
+		c.String(http.StatusBadRequest, constants.ERROR_HANDLING)
 		return
 	}
 	redis.SetKeyValueWithExpiration(liveId, string(stringifiedResult), 15)
 	if err != nil {
-		c.String(http.StatusBadRequest, "Request cannot be handled")
+		c.String(http.StatusBadRequest, constants.ERROR_HANDLING)
 		return
 	}
 	c.JSON(http.StatusOK, result)
