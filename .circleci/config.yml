@@ -1,0 +1,51 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.16
+    parallelism: 2
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "./server/go.sum" }}
+      - run:
+          name: Build Golang Server
+          command: cd server/cmd/server && go build
+      - save_cache:
+          key: go-mod-v4-{{ checksum "./server/go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - sonarcloud/scan
+  test:
+    environment:
+      CC_TEST_REPORTER_ID: 9ce0182c643aa45e94076cb723f2aaf88285b1b799cde41c0ca2ed67b83a2ffa
+      TEST_RESULTS: /tmp/test-results
+    docker:
+      - image: circleci/golang:1.16
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-v4-{{ checksum "./server/go.sum" }}
+      - run:
+          name: Test Golang Server
+          command: cd server/cmd/server && go test -v -covermode=atomic -coverprofile=coverage.txt ./... -coverpkg=./...
+      - save_cache:
+          key: go-mod-v4-{{ checksum "./server/go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+      - codecov/upload:
+          file: "./server/cmd/server/coverage.txt"
+
+orbs:
+  sonarcloud: sonarsource/sonarcloud@1.0.1
+  codecov: codecov/codecov@1.2.5
+
+workflows:
+  main:
+    jobs:
+      - build:
+          context: SonarCloud
+      - test

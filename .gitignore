@@ -2,3 +2,5 @@
 server/.idea/
 .idea
 
+
+server/cmd/server/server.exe

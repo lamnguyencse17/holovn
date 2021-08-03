@@ -1,1 +1,2 @@
 holovn
+[![codecov](https://codecov.io/gh/lamnguyencse17/holovn/branch/main/graph/badge.svg?token=NND35DOJM7)](https://codecov.io/gh/lamnguyencse17/holovn) [![CircleCI](https://circleci.com/gh/lamnguyencse17/holovn/tree/main.svg?style=shield)](https://circleci.com/gh/lamnguyencse17/holovn/tree/main)
