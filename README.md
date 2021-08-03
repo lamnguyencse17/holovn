@@ -26,7 +26,7 @@ See also the list of [contributors](https://github.com/lamnguyencse17/holovn/gra
 
 
 ## Contacts
-- For urgent contact, please message me on [Facebook](https://www.facebook.com/me/)
+- For urgent contact, please message me on [Facebook](https://www.facebook.com/zodiac3011/)
 - For collaboration, please send an email to [nguyenquanglam3008@gmail.com](mailto:nguyenquanglam3008@gmail.com)
 
 <br />
@@ -59,5 +59,5 @@ Danh sách cụ thể được cung cấp tại [contributors](https://github.co
 
 
 ## Liên hệ
-- Nếu cần leien lạc khẩn cấp hãy nhắn tin trên [Facebook](https://www.facebook.com/me/)
+- Nếu cần leien lạc khẩn cấp hãy nhắn tin trên [Facebook](https://www.facebook.com/zodiac3011/)
 - Để liên hệ hợp tác, hãy gửi email đến [nguyenquanglam3008@gmail.com](mailto:nguyenquanglam3008@gmail.com)
