@@ -5,6 +5,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"log"
 	"server/cmd/server/env"
+	"time"
 )
 
 var ctx = context.Background()
@@ -22,6 +23,15 @@ func InitRedisClient() {
 
 func SetKeyValue(key string, value string) bool {
 	err := rdb.Set(ctx, key, value, 0).Err()
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	return true
+}
+
+func SetKeyValueWithExpiration(key string, value string, expire int32) bool {
+	err := rdb.Set(ctx, key, value, time.Second*time.Duration(expire)).Err()
 	if err != nil {
 		log.Println(err)
 		return false

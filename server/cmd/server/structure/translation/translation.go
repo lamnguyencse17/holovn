@@ -25,7 +25,7 @@ func ConvertTranslationsToDatedTranslations(translations []TranslationData) []ID
 	var convertedTranslations = make([]IDatedTranslation, 0)
 	for _, translation := range translations {
 		var converted IDatedTranslation
-		intTime, err := strconv.ParseInt("1405544146", 10, 64)
+		intTime, err := strconv.ParseInt(translation.Timestamp, 10, 64)
 		if err != nil {
 			log.Println(err)
 			continue
