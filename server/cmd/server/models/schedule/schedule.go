@@ -41,12 +41,11 @@ func CreateSchedule(schedules []schedule.ScheduleData){
 		updateOperation = append(updateOperation, scheduleOperation)
 	}
 
-	result,err := scheduleCollection.BulkWrite(context.TODO(), updateOperation)
+	_,err := scheduleCollection.BulkWrite(context.TODO(), updateOperation)
 
 	if err!=nil {
 
 		log.Println(err)
 		return
 	}
-	log.Println(result)
 }
