@@ -6,8 +6,8 @@ type ScheduleData struct {
 	ScheduleId string `bson:"scheduleId" json:"id"`
 	Title string `json:"title"`
 	Type string `json:"type"`
-	PublishedAt string `bson:"publishedAt" json:"published_at"`
-	AvailableAt string `bson:"availableAt" json:"available_at"`
+	PublishedAt string `bson:"publishedAt" json:"publishedAt"`
+	AvailableAt string `bson:"availableAt" json:"availableAt"`
 	Duration int `json:"duration"`
 	Status string `json:"status"`
 	Channel channel.ChannelData `json:"channel"`

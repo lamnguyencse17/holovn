@@ -6,5 +6,5 @@ type ChannelData struct {
 	Org string `json:"org"`
 	Type string `json:"type"`
 	Photo string `json:"photo"`
-	EnglishName string `bson:"englishName" json:"english_name"`
+	EnglishName string `bson:"englishName" json:"englishName"`
 }
