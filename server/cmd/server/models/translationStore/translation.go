@@ -65,3 +65,15 @@ func GetTranslation(liveId string) (ITranslationStore, error) {
 	}
 	return requestedTranslation, nil
 }
+
+func DeleteTranslation(liveId string) error {
+	filter := bson.D{{"liveId", liveId}}
+	ctx, cancelFunction := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancelFunction()
+	deleteResult, err := translationCollection.DeleteOne(ctx, filter)
+	if err != nil {
+		return err
+	}
+	log.Println("DELETED: ", deleteResult.DeletedCount)
+	return nil
+}
