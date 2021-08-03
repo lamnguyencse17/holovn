@@ -8,7 +8,7 @@
 
 This project aims to provide a machine-translation based on community translations on Holodex
 
----
+
 ## Techstack
 
 - Server
@@ -16,7 +16,7 @@ This project aims to provide a machine-translation based on community translatio
   - Redis
   - MongoDB
 
----
+
 ## Author
 **Nguyen Quang Lam** - [lamnguyencse17](https://github.com/lamnguyencse17)
 
@@ -24,7 +24,7 @@ This project aims to provide a machine-translation based on community translatio
 
 See also the list of [contributors](https://github.com/lamnguyencse17/holovn/graphs/contributors) who participated in this project.
 
----
+
 ## Contacts
 - For urgent contact, please message me on [Facebook](https://www.facebook.com/me/)
 - For collaboration, please send an email to [nguyenquanglam3008@gmail.com](mailto:nguyenquanglam3008@gmail.com)
@@ -41,7 +41,7 @@ See also the list of [contributors](https://github.com/lamnguyencse17/holovn/gra
 
 Dự án này được thực hiện nhằm cung cấp bản dịch tự động dựa trên bản dịch từ Holodex
 
----
+
 ## Techstack
 
 - Server
@@ -49,7 +49,7 @@ Dự án này được thực hiện nhằm cung cấp bản dịch tự động
   - Redis
   - MongoDB
 
----
+
 ## Tác giả
 **Nguyen Quang Lam** - [lamnguyencse17](https://github.com/lamnguyencse17)
 
@@ -57,7 +57,7 @@ Dự án này được thực hiện nhằm cung cấp bản dịch tự động
 
 Danh sách cụ thể được cung cấp tại [contributors](https://github.com/lamnguyencse17/holovn/graphs/contributors)
 
----
+
 ## Liên hệ
 - Nếu cần leien lạc khẩn cấp hãy nhắn tin trên [Facebook](https://www.facebook.com/me/)
 - Để liên hệ hợp tác, hãy gửi email đến [nguyenquanglam3008@gmail.com](mailto:nguyenquanglam3008@gmail.com)
