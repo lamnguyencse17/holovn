@@ -25,7 +25,7 @@ func TestScheduleHandler (t *testing.T) {
 	assert.Equal(t, scheduleResult.Status, "live")
 	assert.Equal(t, scheduleResult.Title,"TestScheduleTitle" )
 	assert.Equal(t, scheduleResult.Channel.ChannelId, "ChannelHolo")
-	
+
 	deleteSavedSchedule(scheduleId)
 }
 
@@ -61,7 +61,7 @@ func getSavedSchedule(scheduleId string) schedule.ScheduleData {
 	err := scheduleCollection.FindOne(context.TODO(), findFilter).Decode(&result)
 
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 
 	return result
