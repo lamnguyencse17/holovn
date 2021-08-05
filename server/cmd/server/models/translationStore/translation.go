@@ -4,11 +4,13 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"server/cmd/server/env"
 	"server/cmd/server/models"
 	"server/cmd/server/structure/translation"
+	"server/cmd/server/util"
 	"time"
 )
 
@@ -53,17 +55,29 @@ func InsertToTranslationStore(liveId string, translations []translation.IDatedTr
 	}
 }
 
-func GetTranslation(liveId string) (ITranslationStore, error) {
-	var requestedTranslation ITranslationStore
+func GetTranslation(liveId string, timestamp int64) (returnedTranslationStore ITranslationStore, err error) {
+	var requestedTranslation []ITranslationStore
+	convertedTimestamp, err := util.ConvertIntToPrimitiveDate(timestamp)
+	if err != nil {
+		return returnedTranslationStore, err
+	}
 	ctx, cancelFunction := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunction()
-	filter := bson.D{{"liveId", liveId}}
-	err := translationCollection.FindOne(ctx, filter).Decode(&requestedTranslation)
+	matchStage := bson.D{{"$match", bson.D{{"liveId", liveId}}}}
+	filterCondition := bson.D{{"$gte", bson.A{"$$translation.timestamp", convertedTimestamp}}}
+	filterOption := bson.D{{"input", "$translations"}, {"as", "translation"}, {"cond", filterCondition}}
+	projectStage := bson.D{{"$project", bson.D{{"liveId", 1}, {"lastUpdated", 1}, {"translations", bson.D{{"$filter", filterOption}}}}}}
+	translationCursor, err := translationCollection.Aggregate(ctx, mongo.Pipeline{matchStage, projectStage})
 	if err != nil {
 		log.Println(err)
-		return requestedTranslation, err
+		return returnedTranslationStore, err
 	}
-	return requestedTranslation, nil
+	if err = translationCursor.All(ctx, &requestedTranslation); err != nil {
+		panic(err)
+	}
+	returnedTranslationStore = requestedTranslation[0]
+	log.Println(returnedTranslationStore)
+	return returnedTranslationStore, nil
 }
 
 func DeleteTranslation(liveId string) error {

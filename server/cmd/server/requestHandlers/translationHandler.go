@@ -24,7 +24,7 @@ func HandleGetTranslation(c *gin.Context) {
 		c.JSON(http.StatusOK, translations)
 		return
 	}
-	result, err := translationStore.GetTranslation(liveId)
+	result, err := translationStore.GetTranslation(liveId, 0)
 	if err != nil {
 		//TODO: getTL
 	}

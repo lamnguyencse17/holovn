@@ -2,9 +2,7 @@ package translation
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"log"
-	"strconv"
-	"time"
+	"server/cmd/server/util"
 )
 
 type TranslationData struct {
@@ -25,14 +23,13 @@ func ConvertTranslationsToDatedTranslations(translations []TranslationData) []ID
 	var convertedTranslations = make([]IDatedTranslation, 0)
 	for _, translation := range translations {
 		var converted IDatedTranslation
-		intTime, err := strconv.ParseInt(translation.Timestamp, 10, 64)
-		if err != nil {
-			log.Println(err)
-			continue
-		}
 		converted.Translated = ""
 		converted.Original = translation.Message
-		converted.Timestamp = primitive.NewDateTimeFromTime(time.Unix(intTime, 0))
+		convertedDate, err := util.ConvertIntToPrimitiveDate(translation.Timestamp)
+		if err != nil {
+			continue
+		}
+		converted.Timestamp = convertedDate
 		converted.Name = translation.Name
 		convertedTranslations = append(convertedTranslations, converted)
 	}

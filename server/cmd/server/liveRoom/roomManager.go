@@ -38,6 +38,8 @@ func pollRoom(roomData room.RoomData) {
 			}
 			redis.SetKeyValue(roomData.Name+"-pull", env.ReadEnv("SID"))
 		} else {
+			translationStore.GetTranslation(roomData.Name, roomData.LastTranslation)
+			//chatData = fetchedTranslationStore.Translations
 			log.Println("Get translationStore from DB")
 		}
 		newestTimeStamp, _ := strconv.ParseInt(chatData[len(chatData)-1].Timestamp, 10, 64)
