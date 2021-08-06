@@ -13,5 +13,5 @@ type RoomData struct {
 }
 
 type UpdateTranslationData struct {
-	NewTranslation []translation.TranslationData `json:"newTranslation"`
+	NewTranslation []translation.IAnnouncingTranslation `json:"newTranslation"`
 }

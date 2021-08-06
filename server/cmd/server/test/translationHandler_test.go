@@ -24,7 +24,7 @@ type translationHandlerResponse struct {
 
 func TestTranslationHandler(t *testing.T) {
 	liveId := "test_liveId"
-	prepData(liveId)
+	prepTransactionHandlerTestData(liveId)
 	// First request. Should be in DB
 	req, _ := http.NewRequest("GET", "/live/"+liveId+"/translations", nil)
 	responseRecorder := httptest.NewRecorder()
@@ -42,10 +42,10 @@ func TestTranslationHandler(t *testing.T) {
 	translations := redis.GetValue(liveId)
 	assert.NotEqual(t, "", translations)
 	// Clean up
-	cleanUp(liveId)
+	cleanUpTranslationHandlerTest(liveId)
 }
 
-func prepData(liveId string) {
+func prepTransactionHandlerTestData(liveId string) {
 	intTime, err := strconv.ParseInt("1405544146", 10, 64)
 	if err != nil {
 		log.Println(err)
@@ -57,7 +57,7 @@ func prepData(liveId string) {
 	translationStore.InsertToTranslationStore(liveId, translations)
 }
 
-func cleanUp(liveId string) {
+func cleanUpTranslationHandlerTest(liveId string) {
 	err := translationStore.DeleteTranslation(liveId)
 	if err != nil {
 		log.Fatal(err)
