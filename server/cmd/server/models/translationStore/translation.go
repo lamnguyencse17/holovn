@@ -28,12 +28,11 @@ func CreateTranslation(liveId string) {
 	initialTranslationStore := ITranslationStore{LiveId: liveId, Translations: make([]translation.IDatedTranslation, 0)}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	translationResult, err := translationCollection.InsertOne(ctx, initialTranslationStore)
+	_, err := translationCollection.InsertOne(ctx, initialTranslationStore)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	log.Println(translationResult)
 }
 
 func InsertToTranslationStore(liveId string, translations []translation.IDatedTranslation) {
@@ -64,7 +63,7 @@ func GetTranslation(liveId string, timestamp int64) (returnedTranslationStore IT
 	ctx, cancelFunction := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelFunction()
 	matchStage := bson.D{{"$match", bson.D{{"liveId", liveId}}}}
-	filterCondition := bson.D{{"$gte", bson.A{"$$translation.timestamp", convertedTimestamp}}}
+	filterCondition := bson.D{{"$gt", bson.A{"$$translation.timestamp", convertedTimestamp}}}
 	filterOption := bson.D{{"input", "$translations"}, {"as", "translation"}, {"cond", filterCondition}}
 	projectStage := bson.D{{"$project", bson.D{{"liveId", 1}, {"lastUpdated", 1}, {"translations", bson.D{{"$filter", filterOption}}}}}}
 	translationCursor, err := translationCollection.Aggregate(ctx, mongo.Pipeline{matchStage, projectStage})
@@ -76,7 +75,6 @@ func GetTranslation(liveId string, timestamp int64) (returnedTranslationStore IT
 		panic(err)
 	}
 	returnedTranslationStore = requestedTranslation[0]
-	log.Println(returnedTranslationStore)
 	return returnedTranslationStore, nil
 }
 

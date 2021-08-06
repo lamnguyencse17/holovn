@@ -18,6 +18,8 @@ func ConvertTimestampToPrimitiveDate(timestamp interface{}) (convertedDate primi
 			log.Println(err)
 			return convertedDate, err
 		}
+		// STRING INPUT IS FROM HOLODEX IN MILISECOND. THEREFOR *10^6 FOR NANOUNIX STANDARD IN SYSTEM
+		convertedIntTime = convertedIntTime * 1000000
 	case int64:
 		convertedIntTime = typedTimestamp
 	default:
@@ -27,6 +29,7 @@ func ConvertTimestampToPrimitiveDate(timestamp interface{}) (convertedDate primi
 		log.Println(err)
 		return convertedDate, err
 	}
-	convertedDate = primitive.NewDateTimeFromTime(time.Unix(convertedIntTime/1000, 0))
+
+	convertedDate = primitive.NewDateTimeFromTime(time.Unix(0, convertedIntTime))
 	return convertedDate, nil
 }
