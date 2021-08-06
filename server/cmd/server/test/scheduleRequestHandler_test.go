@@ -13,5 +13,8 @@ func TestRequestGetCurrentSchedule(t *testing.T){
 	responseRecorder := httptest.NewRecorder()
 	Router.ServeHTTP(responseRecorder,req)
 
+
 	assert.Equal(t, 200, responseRecorder.Code)
+
+	assert.NotEmpty(t, responseRecorder.Body, "Body is not empty")
 }
