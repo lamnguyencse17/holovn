@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
+	"server/cmd/server/constants"
 	"server/cmd/server/env"
 	"server/cmd/server/models"
 	schedule2 "server/cmd/server/models/schedule"
@@ -41,6 +42,21 @@ func TestUpdateMatchScheduleHandler (t *testing.T) {
 	deleteSavedSchedule(scheduleId)
 }
 
+func TestGetCurrentScheduleHandler(t *testing.T){
+	assert.Condition(t, checkCurrentStatus, "Found wrong status")
+}
+
+func checkCurrentStatus() bool {
+	scheduleData, _ := schedule2.GetCurrentSchedule()
+
+	for _, schedule:=range scheduleData {
+		if schedule.Status != constants.LIVE_STATUS && schedule.Status != constants.UPCOMING_STATUS {
+			return false
+		}
+	}
+
+	return true
+}
 
 func createTestSchedule(newSchedule schedule.ScheduleData) {
 	scheduleData := make([]schedule.ScheduleData, 0)
@@ -108,3 +124,4 @@ func prepTestUpdateScheduleData(scheduleId string){
 		}}
 	createTestSchedule(newSchedule)
 }
+
