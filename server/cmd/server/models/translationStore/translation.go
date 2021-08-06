@@ -57,7 +57,7 @@ func InsertToTranslationStore(liveId string, translations []translation.IDatedTr
 
 func GetTranslation(liveId string, timestamp int64) (returnedTranslationStore ITranslationStore, err error) {
 	var requestedTranslation []ITranslationStore
-	convertedTimestamp, err := util.ConvertIntToPrimitiveDate(timestamp)
+	convertedTimestamp, err := util.ConvertTimestampToPrimitiveDate(timestamp)
 	if err != nil {
 		return returnedTranslationStore, err
 	}

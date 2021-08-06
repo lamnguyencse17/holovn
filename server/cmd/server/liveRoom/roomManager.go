@@ -12,53 +12,63 @@ import (
 )
 
 func pollRoom(roomData room.RoomData) {
+	isPullingInstance := isGetTlInstance(roomData.Name)
 	defer log.Println("NOT LONGER EXIST")
 	for range time.Tick(time.Second * 20) {
 		if !DoesRoomExist(roomData.Name) {
 			return
 		}
-		log.Println("POLLING ROOMS")
+		log.Println("POLLING ROOM")
 		limit := 10
-		if roomData.LastTranslation == 0 {
+		if roomData.LastTranslation == 0 && isPullingInstance { // NEWLY CREATED ROOM
 			translationStore.CreateTranslation(roomData.Name)
 			limit = 10000
 		}
-		pullingStatus := redis.GetValue(roomData.Name + "-pull")
-
-		var chatData []translation.TranslationData
-		var err error
-
-		if pullingStatus == "" || pullingStatus == env.ReadEnv("SID") {
-			chatData, err = GetTl(roomData.Name, limit)
-
-			if err != nil {
-				log.Println("GET TL ERROR")
-				log.Println(err)
-				continue
-			}
-			redis.SetKeyValue(roomData.Name+"-pull", env.ReadEnv("SID"))
-		} else {
-			translationStore.GetTranslation(roomData.Name, roomData.LastTranslation)
-			//chatData = fetchedTranslationStore.Translations
-			log.Println("Get translationStore from DB")
+		if isPullingInstance {
+			roomData = handleAsPullingInstance(roomData, limit)
+			continue
 		}
-		newestTimeStamp, _ := strconv.ParseInt(chatData[len(chatData)-1].Timestamp, 10, 64)
-		if roomData.LastTranslation < newestTimeStamp {
-			filteredChatData := chatData
-			if limit != 10000 {
-				filteredChatData = filterChatData(chatData, roomData.LastTranslation)
-			}
-			roomData = UpdateRoomLastChat(roomData.Name, newestTimeStamp)
-			announceNewData(roomData, filteredChatData)
-			if pullingStatus == "" {
-				parsedChatData := translation.ConvertTranslationsToDatedTranslations(filteredChatData)
-				translationStore.InsertToTranslationStore(roomData.Name, parsedChatData)
-			}
-		}
+		roomData = handleAsGettingInstance(roomData)
 	}
 }
 
-func announceNewData(roomData room.RoomData, chatData []translation.TranslationData) {
+func handleAsGettingInstance(roomData room.RoomData) (newRoomData room.RoomData) {
+	fetchedTranslationStore, err := translationStore.GetTranslation(roomData.Name, roomData.LastTranslation)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	parsedChatData := fetchedTranslationStore.Translations
+	newestTimeStamp := parsedChatData[len(parsedChatData)-1].Timestamp.Time().Unix()
+	announcingData := translation.ConvertDatedTranslationsToAnnouncingTranslations(parsedChatData)
+	announceNewData(roomData, announcingData)
+	return UpdateRoomLastChat(roomData.Name, newestTimeStamp)
+}
+
+func handleAsPullingInstance(roomData room.RoomData, limit int) (newRoomData room.RoomData) {
+	chatData, err := GetTl(roomData.Name, limit)
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	redis.SetKeyValue(roomData.Name+"-pull", env.ReadEnv("SID"))
+	newestTimeStamp, _ := strconv.ParseInt(chatData[len(chatData)-1].Timestamp, 10, 64)
+	if roomData.LastTranslation < newestTimeStamp {
+		filteredChatData := chatData
+		if limit != 10000 {
+			filteredChatData = filterChatData(chatData, roomData.LastTranslation)
+		}
+		parsedChatData := translation.ConvertTranslationsToDatedTranslations(filteredChatData)
+		translationStore.InsertToTranslationStore(roomData.Name, parsedChatData)
+		announcingData := translation.ConvertDatedTranslationsToAnnouncingTranslations(parsedChatData)
+		announceNewData(roomData, announcingData)
+		return UpdateRoomLastChat(roomData.Name, newestTimeStamp)
+	}
+	return roomData
+}
+
+func announceNewData(roomData room.RoomData, chatData []translation.IAnnouncingTranslation) {
 	var newChatData room.UpdateTranslationData
 	newChatData.NewTranslation = chatData
 	for _, socket := range roomData.Sockets {
@@ -79,4 +89,9 @@ func filterChatData(chatData []translation.TranslationData, timestamp int64) (fi
 		}
 	}
 	return filteredChatData
+}
+
+func isGetTlInstance(liveId string) (pullingStatus bool) {
+	pullValue := redis.GetValue(liveId + "-pull")
+	return pullValue == "" || pullValue == env.ReadEnv("SID")
 }

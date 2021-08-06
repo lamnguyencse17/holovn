@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func ConvertIntToPrimitiveDate(timestamp interface{}) (convertedDate primitive.DateTime, err error) {
+func ConvertTimestampToPrimitiveDate(timestamp interface{}) (convertedDate primitive.DateTime, err error) {
 	var convertedIntTime int64
 	switch typedTimestamp := timestamp.(type) {
 	case int32:
