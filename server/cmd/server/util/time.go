@@ -27,6 +27,6 @@ func ConvertTimestampToPrimitiveDate(timestamp interface{}) (convertedDate primi
 		log.Println(err)
 		return convertedDate, err
 	}
-	convertedDate = primitive.NewDateTimeFromTime(time.Unix(convertedIntTime, 0))
+	convertedDate = primitive.NewDateTimeFromTime(time.Unix(convertedIntTime/1000, 0))
 	return convertedDate, nil
 }

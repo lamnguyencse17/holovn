@@ -18,7 +18,7 @@ type ITranslationStore struct {
 	ID           primitive.ObjectID              `bson:"_id,omitempty" json:"_id"`
 	LiveId       string                          `bson:"liveId,omitempty" json:"liveId"`
 	Translations []translation.IDatedTranslation `bson:"translations,omitempty" json:"translations"`
-	LastUpdated  primitive.DateTime              `bson:"last_updated,omitempty" json:"lastUpdated"`
+	LastUpdated  primitive.DateTime              `bson:"lastUpdated,omitempty" json:"lastUpdated"`
 }
 
 var database = env.ReadEnv("DatabaseName")
@@ -39,7 +39,7 @@ func CreateTranslation(liveId string) {
 func InsertToTranslationStore(liveId string, translations []translation.IDatedTranslation) {
 	opts := options.Update()
 	updateFilter := bson.D{{"liveId", liveId}}
-	updateOperation := bson.D{{"$push", bson.D{{"translations", bson.D{{"$each", translations}}}}}, {"$set", bson.D{{"LastUpdate", time.Now()}}}}
+	updateOperation := bson.D{{"$push", bson.D{{"translations", bson.D{{"$each", translations}}}}}, {"$set", bson.D{{"lastUpdated", time.Now()}}}}
 	result, err := translationCollection.UpdateOne(context.TODO(), updateFilter, updateOperation, opts)
 	if err != nil {
 		log.Println(err)

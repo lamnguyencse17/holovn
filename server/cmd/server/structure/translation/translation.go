@@ -33,7 +33,7 @@ func ConvertDatedTranslationsToAnnouncingTranslations(translations []IDatedTrans
 		var converted IAnnouncingTranslation
 		converted.Translated = translation.Translated
 		converted.Original = translation.Original
-		converted.Timestamp = time.Unix(0, int64(translation.Timestamp))
+		converted.Timestamp = time.Unix(int64(translation.Timestamp)/1000, 0)
 		converted.Name = translation.Name
 		convertedTranslations = append(convertedTranslations, converted)
 	}
