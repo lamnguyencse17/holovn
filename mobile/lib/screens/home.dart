@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:holovn_mobile/models/schedule.dart';
+import 'package:holovn_mobile/models/schedule_list.dart';
+import 'package:holovn_mobile/providers/schedule.dart';
 import 'package:holovn_mobile/widget/home/live_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,8 +22,19 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  List<String> _stringList = ["a", "b", "c", "d"];
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  List<String> _stringList = [];
+  late ScheduleList _scheduleList;
+  @override
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+    fetchSchedule().then((fetchedSchedules) => {
+      _scheduleList.values = fetchedSchedules.values
+    });
+    _stringList = ["a", "b", "c", "d"];
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
