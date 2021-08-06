@@ -5,6 +5,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
+	"server/cmd/server/constants"
 	"server/cmd/server/env"
 	"server/cmd/server/models"
 	"server/cmd/server/structure/schedule"
@@ -48,4 +49,25 @@ func CreateSchedule(schedules []schedule.ScheduleData){
 		log.Println(err)
 		return
 	}
+}
+
+func GetCurrentSchedule() ([]schedule.ScheduleData, error) {
+	filter := bson.D{{"status", bson.D {{"$in", bson.A{constants.LIVE_STATUS, constants.UPCOMING_STATUS}}}}}
+
+	result,err := scheduleCollection.Find(context.TODO(), filter)
+
+	if err != nil {
+		log.Println(err)
+		return nil,err
+	}
+
+	var schedule []schedule.ScheduleData
+
+	err = result.All(context.TODO(), &schedule)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return schedule,nil
 }
