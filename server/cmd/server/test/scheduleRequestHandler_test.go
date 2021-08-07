@@ -6,8 +6,10 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	schedule2 "server/cmd/server/structure/schedule"
 	"testing"
+	"time"
 )
 
 func TestRequestGetCurrentSchedule(t *testing.T){
@@ -36,5 +38,25 @@ func TestRequestGetCurrentSchedule(t *testing.T){
 	assert.Equal(t, scheduleData[scheduleLength- 1].Title,"TestScheduleInsertTitle")
 
 	deleteSavedSchedule("test_scheduleId")
+}
+
+func TestTypeOfTime(t *testing.T){
+	prepTestInsertScheduleData("test_scheduleId")
+
+	req,_ := http.NewRequest("GET", "/schedules/current", nil)
+
+	responseRecorder := httptest.NewRecorder()
+	Router.ServeHTTP(responseRecorder,req)
+
+	var scheduleData []schedule2.ResponseScheduleData
+
+	err := json.Unmarshal(responseRecorder.Body.Bytes(), &scheduleData)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	assert.IsType(t, reflect.TypeOf(scheduleData[0].StartScheduled), reflect.TypeOf(time.Time{}))
+	assert.IsType(t, reflect.TypeOf(scheduleData[0].AvailableAt), reflect.TypeOf(time.Time{}))
+	assert.IsType(t, reflect.TypeOf(scheduleData[0].PublishedAt), reflect.TypeOf(time.Time{}))
 }
 
