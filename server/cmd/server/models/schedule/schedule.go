@@ -32,7 +32,7 @@ func CreateSchedule(schedules []schedule.ScheduleData){
 		scheduleOperation.SetUpdate(bson.D{
 			{"$set",
 				bson.D{
-					{"lastUpdate", time.Now() },
+					{"lastUpdated", time.Now()},
 					{"scheduleId", schedule.ScheduleId},
 					{"title", schedule.Title},
 					{"publishedAt", publishedAt},

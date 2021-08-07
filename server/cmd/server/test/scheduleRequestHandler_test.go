@@ -3,6 +3,7 @@ package test
 import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -55,8 +56,11 @@ func TestTypeOfTime(t *testing.T){
 		log.Fatal(err)
 	}
 
-	assert.IsType(t, reflect.TypeOf(scheduleData[0].StartScheduled), reflect.TypeOf(time.Time{}))
-	assert.IsType(t, reflect.TypeOf(scheduleData[0].AvailableAt), reflect.TypeOf(time.Time{}))
-	assert.IsType(t, reflect.TypeOf(scheduleData[0].PublishedAt), reflect.TypeOf(time.Time{}))
+
+	currentTime := primitive.NewDateTimeFromTime(time.Now())
+
+	assert.IsType(t, reflect.TypeOf(scheduleData[0].StartScheduled), reflect.TypeOf(currentTime))
+	assert.IsType(t, reflect.TypeOf(scheduleData[0].AvailableAt), reflect.TypeOf(currentTime))
+	assert.IsType(t, reflect.TypeOf(scheduleData[0].PublishedAt), reflect.TypeOf(currentTime))
 }
 
