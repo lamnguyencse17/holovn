@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   json_annotation:
+  url_launcher:
   http:
   flutter:
     sdk: flutter

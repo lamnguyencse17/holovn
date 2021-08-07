@@ -1,31 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:holovn_mobile/screens/home.dart';
+import 'package:holovn_mobile/router/route_parser.dart';
+import 'package:holovn_mobile/router/router.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(HolovnApp());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class HolovnApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _HolovnAppState();
+}
+
+class _HolovnAppState extends State<HolovnApp> {
+  void initState() {
+    super.initState();
+  }
+
+  AppRouter _routerDelegate = AppRouter();
+  RouteParser _routeInformationParser = RouteParser();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Home Page',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(title: 'Holovn - A Vietnamese Hololive Fan App'),
-    );
+    // return MaterialApp(
+    //     title: 'Home Page',
+    //     theme: ThemeData(
+    //       primarySwatch: Colors.blue,
+    //     ),
+    //     );
+    return MaterialApp.router(
+        title: "Holovn - A Vietnamese Hololive Fan App",
+        theme: ThemeData(primarySwatch: Colors.blue),
+        routeInformationParser: _routeInformationParser,
+        routerDelegate: _routerDelegate);
   }
 }
-
-

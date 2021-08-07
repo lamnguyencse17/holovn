@@ -7,7 +7,9 @@ import 'package:holovn_mobile/screens/home/home_layout_builder.dart';
 import 'package:holovn_mobile/widget/home/live_card.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key, required this.title}) : super(key: key);
+  final void Function(Schedule?, String?) navigateToLive;
+
+  HomePage({Key? key, required this.title, required this.navigateToLive}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -21,12 +23,14 @@ class HomePage extends StatefulWidget {
   final String title;
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState(this.navigateToLive);
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  List<String> _stringList = [];
+  final void Function(Schedule?, String?) navigateToLive;
   late ScheduleList _scheduleList;
+
+  _HomePageState(this.navigateToLive);
   @override
   void initState(){
     super.initState();
@@ -35,7 +39,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     //   _scheduleList.values = fetchedSchedules.values
     // });
     var channel = new Channel("UCp6993wxpyDPHUpavwDFqgg", "SoraCh. ときのそらチャンネル", "Hololive", "vtuber", "https://yt3.ggpht.com/ytc/AKedOLQO9Vyz7ysAwPSio5xvkw6n0xvlyDu7A9eawqIH3w=s800-c-k-c0x00ffffff-no-rj", "Tokino Sora");
-    var schedule = new Schedule("QaKgoFyHPzg", "【ロマサガ3】カタリナ主人公で進めていきます！！【#ときのそら生放送】", "stream", DateTime.now(),  DateTime.now(),  DateTime.now(), 0, "upcoming", channel);
+    var schedule = new Schedule("QaKgoFyHPzg", "【ロマサガ3】カタリナ主人公で進めていきます！！【#ときのそら生放送】", "stream", DateTime.now(),  DateTime.now(),  DateTime.parse("2021-08-09T15:46:28.460+00:00"), 0, "upcoming", channel);
     var list = [schedule, schedule, schedule, schedule];
     _scheduleList = new ScheduleList(list);
   }
@@ -54,7 +58,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
         ),
-        body: HomeLayoutBuilder(_scheduleList)
+        body: HomeLayoutBuilder(_scheduleList,navigateToLive)
     );
   }
 }

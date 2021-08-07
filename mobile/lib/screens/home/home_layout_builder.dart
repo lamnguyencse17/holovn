@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:holovn_mobile/models/schedule.dart';
 import 'package:holovn_mobile/models/schedule_list.dart';
 import 'package:holovn_mobile/widget/home/live_card.dart';
 
 class HomeLayoutBuilder extends StatelessWidget {
   final ScheduleList scheduleList;
-  HomeLayoutBuilder(this.scheduleList);
+  final void Function(Schedule?, String?) navigateToLive;
+  HomeLayoutBuilder(this.scheduleList, this.navigateToLive);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class HomeLayoutBuilder extends StatelessWidget {
         child: FractionallySizedBox(child: GridView.count(
         crossAxisCount: count,
         children: _scheduleList.values
-            .map<Widget>((schedule) => Container(child: new LiveCard(schedule)))
+            .map<Widget>((schedule) => Container(child: new LiveCard(schedule, navigateToLive)))
             .toList())));
   }
 }

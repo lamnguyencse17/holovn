@@ -4,8 +4,8 @@ import 'package:holovn_mobile/widget/home/live_card_description.dart';
 
 class LiveCard extends StatelessWidget {
   final Schedule schedule;
-
-  LiveCard(this.schedule);
+  final void Function(Schedule?, String?) navigateToLive;
+  LiveCard(this.schedule, this.navigateToLive);
 
 
 
@@ -22,7 +22,7 @@ class LiveCard extends StatelessWidget {
                             schedule.scheduleId +
                             "/sddefault_live.jpg",
                         fit: BoxFit.fitWidth)),
-                LiveCardDescription(schedule)
+                LiveCardDescription(schedule, navigateToLive)
               ],
             ),
           )),
