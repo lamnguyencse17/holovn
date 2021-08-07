@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:holovn_mobile/models/channel.dart';
 import 'package:holovn_mobile/models/schedule.dart';
 import 'package:holovn_mobile/models/schedule_list.dart';
 import 'package:holovn_mobile/providers/schedule.dart';
+import 'package:holovn_mobile/screens/home/home_layout_builder.dart';
 import 'package:holovn_mobile/widget/home/live_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,10 +31,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState(){
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
-    fetchSchedule().then((fetchedSchedules) => {
-      _scheduleList.values = fetchedSchedules.values
-    });
-    _stringList = ["a", "b", "c", "d"];
+    // fetchSchedule().then((fetchedSchedules) => {
+    //   _scheduleList.values = fetchedSchedules.values
+    // });
+    var channel = new Channel("UCp6993wxpyDPHUpavwDFqgg", "SoraCh. ときのそらチャンネル", "Hololive", "vtuber", "https://yt3.ggpht.com/ytc/AKedOLQO9Vyz7ysAwPSio5xvkw6n0xvlyDu7A9eawqIH3w=s800-c-k-c0x00ffffff-no-rj", "Tokino Sora");
+    var schedule = new Schedule("QaKgoFyHPzg", "【ロマサガ3】カタリナ主人公で進めていきます！！【#ときのそら生放送】", "stream", DateTime.now(),  DateTime.now(),  DateTime.now(), 0, "upcoming", channel);
+    var list = [schedule, schedule, schedule, schedule];
+    _scheduleList = new ScheduleList(list);
   }
 
   @override
@@ -49,11 +54,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
         ),
-        body: GridView.count(
-            crossAxisCount: 2,
-            children: _stringList.map<Widget>(
-                    (string) => Container(child: new LiveCard("title " + string, "https://yt3.ggpht.com/ytc/AKedOLSIXjxaKvTQAgBpIwZtdI_Ux_cUEi3wefTTSVZW1w=s800-c-k-c0x00ffffff-no-rj"))).toList()
-        )
+        body: HomeLayoutBuilder(_scheduleList)
     );
   }
 }
