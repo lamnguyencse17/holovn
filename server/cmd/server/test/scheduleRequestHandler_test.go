@@ -3,26 +3,38 @@ package test
 import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
+	"log"
 	"net/http"
 	"net/http/httptest"
-	"server/cmd/server/models/schedule"
+	schedule2 "server/cmd/server/structure/schedule"
 	"testing"
 )
 
 func TestRequestGetCurrentSchedule(t *testing.T){
+	prepTestInsertScheduleData("test_scheduleId")
+
 	req,_ := http.NewRequest("GET", "/schedules/current", nil)
 
 	responseRecorder := httptest.NewRecorder()
 	Router.ServeHTTP(responseRecorder,req)
 
-	scheduleData, _ := schedule.GetCurrentSchedule()
-
 	assert.Equal(t, 200, responseRecorder.Code)
 
 	assert.NotEmpty(t, responseRecorder.Body, "Body is not empty")
 
-	parsedScheduledData, _ := json.Marshal(scheduleData)
+	var scheduleData []schedule2.ResponseScheduleData
 
-	assert.ElementsMatch(t, responseRecorder.Body.Bytes(),parsedScheduledData)
+	err := json.Unmarshal(responseRecorder.Body.Bytes(), &scheduleData)
 
+	if err != nil {
+		log.Fatal(err)
+	}
+	scheduleLength := len(scheduleData)
+
+	assert.Equal(t, scheduleData[scheduleLength - 1].ScheduleId, "test_scheduleId" )
+	assert.Equal(t,scheduleData[scheduleLength - 1].Status, "live" )
+	assert.Equal(t, scheduleData[scheduleLength- 1].Title,"TestScheduleInsertTitle")
+
+	deleteSavedSchedule("test_scheduleId")
 }
+
