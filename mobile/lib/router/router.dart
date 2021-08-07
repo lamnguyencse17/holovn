@@ -6,6 +6,8 @@ import 'package:holovn_mobile/screens/live.dart';
 
 class AppRouter extends RouterDelegate<RoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<RoutePath>{
   final GlobalKey<NavigatorState> navigatorKey;
+  final _pages = <Page>[];
+
   Schedule? _selectedSchedule;
   String? liveId;
   bool show404 = false;
@@ -15,16 +17,17 @@ class AppRouter extends RouterDelegate<RoutePath> with ChangeNotifier, PopNaviga
     return Navigator(
       pages: [
         MaterialPage(
-          key: ValueKey("home"),
+          key: ValueKey("Home"),
           child: HomePage(title: 'Holovn - A Vietnamese Hololive Fan App', navigateToLive: _navigateToSelectedSchedule),
         ),
-        if (_selectedSchedule != null) MaterialPage(child: Live(_selectedSchedule, liveId))
+        if (_selectedSchedule != null || liveId != null) MaterialPage(key: ValueKey("Live"),child: Live(_selectedSchedule, liveId))
       ],
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
           return false;
         }
         _selectedSchedule = null;
+        liveId = null;
         show404 = false;
         notifyListeners();
         return true;
@@ -35,6 +38,12 @@ class AppRouter extends RouterDelegate<RoutePath> with ChangeNotifier, PopNaviga
   // @override
   // // TODO
   // GlobalKey<NavigatorState> get navigatorKey => throw UnimplementedError();
+
+  @override
+  Future<bool> popRoute() {
+    // TODO: implement popRoute
+    return super.popRoute();
+  }
 
   @override
   Future<void> setNewRoutePath(RoutePath path) async {

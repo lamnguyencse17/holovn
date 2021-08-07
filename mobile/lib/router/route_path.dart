@@ -17,7 +17,7 @@ class RoutePath {
         liveId = null,
         isUnknown = true;
 
-  bool get isHomePage => schedule == null;
+  bool get isHomePage => schedule == null && liveId == null;
 
   bool get isLivePage => schedule != null || liveId != null;
 }

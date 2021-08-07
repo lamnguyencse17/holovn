@@ -25,9 +25,11 @@ class RouteParser extends RouteInformationParser<RoutePath> {
   @override
   RouteInformation restoreRouteInformation(RoutePath path) {
     if (path.isHomePage) {
+      print("HOME");
       return RouteInformation(location: '/');
     }
     if (path.isLivePage) {
+      print("LIVE");
       return RouteInformation(location: '/live/${path.liveId}');
     }
     return RouteInformation(location: '/404');

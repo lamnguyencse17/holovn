@@ -17,10 +17,16 @@ class _LiveState extends State<Live> {
   @override
   Widget build(BuildContext context) {
     var _schedule = this.schedule;
-    if (_schedule == null){
-      return Container();
+    if (_schedule == null) {
+      var _liveId = this.liveId;
+      if (_liveId == null) {
+        return Container();
+      }
+      return Container(child: Text(_liveId));
     } else {
-      return Container(child: Text(_schedule.title),);
+      return Container(
+        child: Text(_schedule.title),
+      );
     }
   }
 }
