@@ -5,6 +5,6 @@ import (
 	"server/cmd/server/requestHandlers"
 )
 
-func RouteCurrentSchedule(router *gin.Engine){
+func RouteSchedule(router *gin.Engine){
 	router.GET("/schedules/current", requestHandlers.HandleGetCurrentSchedule)
 }

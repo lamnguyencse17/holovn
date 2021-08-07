@@ -7,7 +7,7 @@ import (
 
 func RunGinRouter(router *gin.Engine) *gin.Engine {
 	RouteLive(router)
-	RouteCurrentSchedule(router)
+	RouteSchedule(router)
 	router.GET("/ws", func(c *gin.Context) {
 		ws.HandleWS(c.Writer, c.Request)
 	})
