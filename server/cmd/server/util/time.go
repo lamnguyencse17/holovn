@@ -34,8 +34,7 @@ func ConvertTimestampToPrimitiveDate(timestamp interface{}) (convertedDate primi
 	return convertedDate, nil
 }
 
-func ConvertTimeStringToDate(timestamp string)(primitive.DateTime,error){
-	tempTime, err := time.Parse(time.RFC3339, timestamp)
-	convertedTime := primitive.NewDateTimeFromTime(tempTime)
+func ConvertTimeStringToDate(timestamp string)(time.Time,error){
+	convertedTime, err := time.Parse(time.RFC3339, timestamp)
 	return convertedTime, err
 }
