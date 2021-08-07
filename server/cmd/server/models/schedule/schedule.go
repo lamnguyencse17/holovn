@@ -9,6 +9,7 @@ import (
 	"server/cmd/server/env"
 	"server/cmd/server/models"
 	"server/cmd/server/structure/schedule"
+	"server/cmd/server/util"
 	"time"
 )
 
@@ -23,14 +24,20 @@ func CreateSchedule(schedules []schedule.ScheduleData){
 		scheduleOperation := mongo.NewUpdateOneModel()
 
 		scheduleOperation.SetFilter(bson.M{"scheduleId": schedule.ScheduleId})
+
+		startScheduled, _ := util.ConvertTimeStringToDate(schedule.StartScheduled)
+		availableAt, _ := util.ConvertTimeStringToDate(schedule.AvailableAt)
+		publishedAt, _ := util.ConvertTimeStringToDate(schedule.PublishedAt)
+
 		scheduleOperation.SetUpdate(bson.D{
 			{"$set",
 				bson.D{
-					{"lastUpdate", time.Now()},
+					{"lastUpdate", time.Now() },
 					{"scheduleId", schedule.ScheduleId},
 					{"title", schedule.Title},
-					{"publishedAt", schedule.PublishedAt},
-					{"availableAt", schedule.AvailableAt},
+					{"publishedAt", publishedAt},
+					{"availableAt", availableAt},
+					{"startScheduled", startScheduled},
 					{"duration", schedule.Duration},
 					{"status", schedule.Status},
 					{"channel", schedule.Channel},
@@ -51,7 +58,7 @@ func CreateSchedule(schedules []schedule.ScheduleData){
 	}
 }
 
-func GetCurrentSchedule() ([]schedule.ScheduleData, error) {
+func GetCurrentSchedule() ([]schedule.ResponseScheduleData, error) {
 	filter := bson.D{{"status", bson.D {{"$in", bson.A{constants.LIVE_STATUS, constants.UPCOMING_STATUS}}}}}
 
 	result,err := scheduleCollection.Find(context.TODO(), filter)
@@ -61,7 +68,7 @@ func GetCurrentSchedule() ([]schedule.ScheduleData, error) {
 		return nil,err
 	}
 
-	var schedule []schedule.ScheduleData
+	var schedule []schedule.ResponseScheduleData
 
 	err = result.All(context.TODO(), &schedule)
 	if err != nil {
