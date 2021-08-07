@@ -66,11 +66,11 @@ func createTestSchedule(newSchedule schedule.ScheduleData) {
 	schedule2.CreateSchedule(scheduleData)
 }
 
-func getSavedSchedule(scheduleId string) schedule.ScheduleData {
+func  getSavedSchedule(scheduleId string) schedule.ResponseScheduleData {
 
 	findFilter := bson.M{"scheduleId": scheduleId }
 
-	var result schedule.ScheduleData
+	var result schedule.ResponseScheduleData
 
 	err := scheduleCollection.FindOne(context.TODO(), findFilter).Decode(&result)
 
@@ -93,8 +93,8 @@ func prepTestInsertScheduleData(scheduleId string){
 	newSchedule := schedule.ScheduleData{
 		ScheduleId: scheduleId,
 		Title: "TestScheduleInsertTitle",
-		PublishedAt: "",
-		AvailableAt: "",
+		PublishedAt:"2021-08-02T07:49:21.000Z",
+		AvailableAt: "2021-08-02T07:49:21.000Z",
 		Duration: 0,
 		Status: "live",
 		Channel: channel.ChannelData{
@@ -111,8 +111,8 @@ func prepTestUpdateScheduleData(scheduleId string){
 	newSchedule := schedule.ScheduleData{
 		ScheduleId: scheduleId,
 		Title: "TestScheduleUpdateTitle",
-		PublishedAt: "",
-		AvailableAt: "",
+		PublishedAt: "2021-08-02T07:49:21.000Z",
+		AvailableAt: "2021-08-02T07:49:21.000Z",
 		Duration: 0,
 		Status: "stream",
 		Channel: channel.ChannelData{
