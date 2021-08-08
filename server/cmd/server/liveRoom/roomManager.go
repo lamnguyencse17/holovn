@@ -2,6 +2,7 @@ package liveRoom
 
 import (
 	"log"
+	"server/cmd/server/constants"
 	"server/cmd/server/env"
 	"server/cmd/server/models/translationStore"
 	"server/cmd/server/redis"
@@ -19,6 +20,12 @@ func pollRoom(roomData room.RoomData) {
 			return
 		}
 		log.Println("POLLING ROOM")
+		status , _ := GetStatusLiveRoom(roomData.Name)
+
+		if status.Status == constants.PAST_STATUS {
+			return
+		}
+
 		limit := 10
 		if roomData.LastTranslation == 0 && isPullingInstance { // NEWLY CREATED ROOM
 			translationStore.CreateTranslation(roomData.Name)
