@@ -7,9 +7,8 @@ import 'package:holovn_mobile/screens/home/home_layout_builder.dart';
 import 'package:holovn_mobile/widget/home/live_card.dart';
 
 class HomePage extends StatefulWidget {
-  final void Function(Schedule?, String?) navigateToLive;
 
-  HomePage({Key? key, required this.title, required this.navigateToLive}) : super(key: key);
+  HomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -23,14 +22,13 @@ class HomePage extends StatefulWidget {
   final String title;
 
   @override
-  _HomePageState createState() => _HomePageState(this.navigateToLive);
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  final void Function(Schedule?, String?) navigateToLive;
   late ScheduleList _scheduleList;
 
-  _HomePageState(this.navigateToLive);
+  _HomePageState();
   @override
   void initState(){
     super.initState();
@@ -58,7 +56,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
         ),
-        body: HomeLayoutBuilder(_scheduleList,navigateToLive)
+        body: HomeLayoutBuilder(_scheduleList)
     );
   }
 }

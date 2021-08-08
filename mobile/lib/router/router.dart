@@ -4,9 +4,13 @@ import 'package:holovn_mobile/router/route_path.dart';
 import 'package:holovn_mobile/screens/home.dart';
 import 'package:holovn_mobile/screens/live.dart';
 
-class AppRouter extends RouterDelegate<RoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<RoutePath>{
+class AppRouter extends RouterDelegate<RoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<RoutePath> {
   final GlobalKey<NavigatorState> navigatorKey;
-  final _pages = <Page>[];
+  final _pages = <Page>[MaterialPage(
+    key: ValueKey("home"),
+    child: HomePage(title: 'Holovn - A Vietnamese Hololive Fan App'),
+  )];
 
   Schedule? _selectedSchedule;
   String? liveId;
@@ -15,34 +19,26 @@ class AppRouter extends RouterDelegate<RoutePath> with ChangeNotifier, PopNaviga
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      pages: [
-        MaterialPage(
-          key: ValueKey("Home"),
-          child: HomePage(title: 'Holovn - A Vietnamese Hololive Fan App', navigateToLive: _navigateToSelectedSchedule),
-        ),
-        if (_selectedSchedule != null || liveId != null) MaterialPage(key: ValueKey("Live"),child: Live(_selectedSchedule, liveId))
-      ],
+      key: navigatorKey,
+      pages: List.of(_pages),
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
           return false;
         }
-        _selectedSchedule = null;
-        liveId = null;
-        show404 = false;
-        notifyListeners();
+        popRoute();
         return true;
       },
     );
   }
-  //
-  // @override
-  // // TODO
-  // GlobalKey<NavigatorState> get navigatorKey => throw UnimplementedError();
 
   @override
   Future<bool> popRoute() {
-    // TODO: implement popRoute
-    return super.popRoute();
+    if (_pages.length >= 1) {
+      _pages.removeLast();
+      notifyListeners();
+      return Future.value(true);
+    }
+    return Future.value(false);
   }
 
   @override
@@ -67,14 +63,28 @@ class AppRouter extends RouterDelegate<RoutePath> with ChangeNotifier, PopNaviga
       return RoutePath.unknown();
     }
 
-    return _selectedSchedule == null
+    return _selectedSchedule == null && liveId == null
         ? RoutePath.home()
         : RoutePath.live(_selectedSchedule, liveId);
   }
 
-  void _navigateToSelectedSchedule(Schedule? schedule, String? scheduleId){
+  void navigate(Schedule? schedule, String? scheduleId) {
     _selectedSchedule = schedule;
     liveId = scheduleId;
+
+    if (_selectedSchedule == null && liveId == null) {
+      show404 = false;
+      _pages.add(MaterialPage(
+        key: ValueKey("home"),
+        child: HomePage(title: 'Holovn - A Vietnamese Hololive Fan App'),
+      ));
+    } else if (_selectedSchedule != null || liveId != null) {
+      _pages.add(MaterialPage(
+        key: ValueKey("Live"),
+        name: scheduleId,
+        child: Live(schedule, liveId),
+      ));
+    }
     notifyListeners();
   }
 

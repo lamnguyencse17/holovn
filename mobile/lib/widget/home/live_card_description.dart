@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:holovn_mobile/models/schedule.dart';
+import 'package:holovn_mobile/router/router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:get/get.dart';
 
 class LiveCardDescription extends StatelessWidget {
   final Schedule schedule;
-  final void Function(Schedule?, String?) navigateToLive;
-  LiveCardDescription(this.schedule, this.navigateToLive);
-
+  LiveCardDescription(this.schedule);
+  AppRouter router = Get.find(tag: "router");
   getAdaptiveTextSize(BoxConstraints constraints, dynamic value) {
     return (value / 650) * constraints.maxWidth;
   }
@@ -65,7 +66,7 @@ class LiveCardDescription extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                       padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
-                      child: InkWell(onTap: () => navigateToLive(schedule, schedule.scheduleId), child:Text(
+                      child: InkWell(onTap: () => router.navigate(schedule, schedule.scheduleId), child:Text(
                         schedule.title,
                         textAlign: TextAlign.start,
                         style: TextStyle(

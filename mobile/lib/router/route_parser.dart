@@ -14,7 +14,6 @@ class RouteParser extends RouteInformationParser<RoutePath> {
     if (uri.pathSegments.length == 2) {
       if (uri.pathSegments[0] != 'live') return RoutePath.unknown();
       var liveId = uri.pathSegments[1];
-      // if (liveId == null) return RoutePath.unknown();
       return RoutePath.live(null, liveId);
     }
 
@@ -25,11 +24,9 @@ class RouteParser extends RouteInformationParser<RoutePath> {
   @override
   RouteInformation restoreRouteInformation(RoutePath path) {
     if (path.isHomePage) {
-      print("HOME");
       return RouteInformation(location: '/');
     }
     if (path.isLivePage) {
-      print("LIVE");
       return RouteInformation(location: '/live/${path.liveId}');
     }
     return RouteInformation(location: '/404');

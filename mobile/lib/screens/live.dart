@@ -20,7 +20,7 @@ class _LiveState extends State<Live> {
     if (_schedule == null) {
       var _liveId = this.liveId;
       if (_liveId == null) {
-        return Container();
+        return Container(child: Text("PENDING"));
       }
       return Container(child: Text(_liveId));
     } else {
