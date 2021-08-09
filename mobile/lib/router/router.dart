@@ -7,10 +7,12 @@ import 'package:holovn_mobile/screens/live.dart';
 class AppRouter extends RouterDelegate<RoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<RoutePath> {
   final GlobalKey<NavigatorState> navigatorKey;
-  final _pages = <Page>[MaterialPage(
-    key: ValueKey("home"),
-    child: HomePage(title: 'Holovn - A Vietnamese Hololive Fan App'),
-  )];
+  final _pages = <Page>[
+    MaterialPage(
+      key: ValueKey("home"),
+      child: HomePage(title: 'Holovn - A Vietnamese Hololive Fan App'),
+    )
+  ];
 
   Schedule? _selectedSchedule;
   String? liveId;
@@ -18,22 +20,27 @@ class AppRouter extends RouterDelegate<RoutePath>
 
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      pages: List.of(_pages),
-      onPopPage: (route, result) {
-        if (!route.didPop(result)) {
-          return false;
-        }
-        popRoute();
-        return true;
-      },
-    );
+    return new WillPopScope(
+        child: Navigator(
+          key: navigatorKey,
+          pages: List.of(_pages),
+          onGenerateRoute: (_) => null,
+          onPopPage: (route, result) {
+            if (!route.didPop(result)) {
+              return false;
+            }
+            popRoute();
+            return true;
+          },
+        ),
+        onWillPop: () async {
+          return !await navigatorKey.currentState!.maybePop();
+        });
   }
 
   @override
   Future<bool> popRoute() {
-    if (_pages.length >= 1) {
+    if (_pages.length > 1) {
       _pages.removeLast();
       notifyListeners();
       return Future.value(true);
