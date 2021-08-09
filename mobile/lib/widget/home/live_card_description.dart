@@ -14,8 +14,15 @@ class LiveCardDescription extends StatelessWidget {
 
   String estimateSchedule(DateTime date) {
     var currentTime = DateTime.now();
-    var difference = date.difference(currentTime);
-    return "Starts in " + difference.inHours.toString() + " hours";
+    var hourDifference = date.difference(currentTime).inHours;
+    var minuteDifference = date.difference(currentTime).inMinutes;
+    if (hourDifference <= 0 && minuteDifference <= 0){
+      return "Live at the moment";
+    }
+    if (hourDifference <= 0){
+      return "Starts in " + minuteDifference.toString() + " minutes";
+    }
+    return "Starts in " + hourDifference.toString() + " hours";
   }
 
   launchChannelPage(String channelId) async{
@@ -26,12 +33,6 @@ class LiveCardDescription extends StatelessWidget {
       throw 'Could not launch $url';
     }
   }
-  //
-  // navigateToLive(BuildContext context, Schedule schedule){
-  //   Navigator.push(context, MaterialPageRoute(builder: (context){
-  //     return Live(schedule, schedule.scheduleId);
-  //   }));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +67,7 @@ class LiveCardDescription extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                       padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
-                      child: InkWell(onTap: () => router.navigate(schedule, schedule.scheduleId), child:Text(
+                      child: InkWell(onTap: () => router.navigate(schedule, schedule.id), child:Text(
                         schedule.title,
                         textAlign: TextAlign.start,
                         style: TextStyle(
@@ -78,7 +79,7 @@ class LiveCardDescription extends StatelessWidget {
                     child: Padding(
                         padding: EdgeInsets.fromLTRB(5, 10, 0, 5),
                         child: InkWell(
-                            onTap: () => launchChannelPage(schedule.channel.channelId),
+                            onTap: () => launchChannelPage(schedule.channel.id),
                             child: Text(schedule.channel.name,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(

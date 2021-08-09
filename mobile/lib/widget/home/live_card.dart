@@ -18,7 +18,7 @@ class LiveCard extends StatelessWidget {
                 new Expanded(
                     child: Image.network(
                         "https://i.ytimg.com/vi/" +
-                            schedule.scheduleId +
+                            schedule.id +
                             "/sddefault_live.jpg",
                         fit: BoxFit.fitWidth)),
                 LiveCardDescription(schedule)

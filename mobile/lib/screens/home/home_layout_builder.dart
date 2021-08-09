@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:holovn_mobile/models/schedule.dart';
-import 'package:holovn_mobile/models/schedule_list.dart';
 import 'package:holovn_mobile/widget/home/live_card.dart';
 
 class HomeLayoutBuilder extends StatelessWidget {
-  final ScheduleList scheduleList;
+  final List<Schedule> scheduleList;
   HomeLayoutBuilder(this.scheduleList);
 
   @override
@@ -21,11 +20,11 @@ class HomeLayoutBuilder extends StatelessWidget {
     });
   }
 
-  Widget _homeGridView(ScheduleList _scheduleList, int count) {
+  Widget _homeGridView(List<Schedule> _scheduleList, int count) {
     return Center(
         child: FractionallySizedBox(child: GridView.count(
         crossAxisCount: count,
-        children: _scheduleList.values
+        children: _scheduleList
             .map<Widget>((schedule) => Container(child: new LiveCard(schedule)))
             .toList())));
   }

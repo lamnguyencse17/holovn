@@ -5,12 +5,13 @@ import (
 	"io/ioutil"
 	"net/http"
 	"server/cmd/server/env"
+	"server/cmd/server/models/scheduleModel"
 	"server/cmd/server/structure/scheduleStruct"
 	"time"
 )
 
 const requestSchedulePrefix = "https://holodex.net/api/v2"
-const requestSchedulePostfix = "/live?lang=en&max_upcoming_hours=48"
+const requestSchedulePostfix = "/live?lang=en&max_upcoming_hours=48&org=Hololive"
 
 var apiKey = env.ReadEnv("HolodexKey")
 
@@ -36,7 +37,7 @@ func getSchedule() ([]scheduleStruct.ScheduleData, error) {
 	}
 
 	err = json.Unmarshal(body, &parsedBody)
-
+	scheduleModel.CreateSchedule(parsedBody)
 	if err != nil {
 		return parsedBody, err
 	}
@@ -46,7 +47,6 @@ func getSchedule() ([]scheduleStruct.ScheduleData, error) {
 
 func loopGetSchedule() {
 	ticker := time.NewTicker(5 * time.Minute)
-
 	for _ = range ticker.C {
 		getSchedule()
 	}
