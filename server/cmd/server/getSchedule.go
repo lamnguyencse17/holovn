@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"server/cmd/server/env"
-	"server/cmd/server/structure/schedule"
+	"server/cmd/server/structure/scheduleStruct"
 	"time"
 )
 
@@ -14,20 +14,20 @@ const requestSchedulePostfix = "/live?lang=en&max_upcoming_hours=48"
 
 var apiKey = env.ReadEnv("HolodexKey")
 
-func getSchedule() ([]schedule.ScheduleData, error){
+func getSchedule() ([]scheduleStruct.ScheduleData, error) {
 	client := http.Client{}
 	requestUrl := requestSchedulePrefix + requestSchedulePostfix
-	request , _ := http.NewRequest("GET", requestUrl, nil)
+	request, _ := http.NewRequest("GET", requestUrl, nil)
 	request.Header.Set("x-api-key", apiKey)
 	resp, err := client.Do(request)
 
-	var parsedBody []schedule.ScheduleData
+	var parsedBody []scheduleStruct.ScheduleData
 
 	if err != nil {
-		return parsedBody , err
+		return parsedBody, err
 	}
 
-	body, err:= ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
 
 	defer resp.Body.Close()
 
@@ -44,7 +44,7 @@ func getSchedule() ([]schedule.ScheduleData, error){
 	return parsedBody, nil
 }
 
-func loopGetSchedule (){
+func loopGetSchedule() {
 	ticker := time.NewTicker(5 * time.Minute)
 
 	for _ = range ticker.C {

@@ -1,4 +1,4 @@
-package schedule
+package scheduleModel
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"server/cmd/server/constants"
 	"server/cmd/server/env"
 	"server/cmd/server/models"
-	"server/cmd/server/structure/schedule"
+	"server/cmd/server/structure/scheduleStruct"
 	"server/cmd/server/util"
 	"time"
 )
@@ -16,11 +16,10 @@ import (
 var database = env.ReadEnv("DatabaseName")
 var scheduleCollection = models.GetMongoClient().Database(database).Collection("schedules")
 
+func CreateSchedule(schedules []scheduleStruct.ScheduleData) {
+	updateOperation := make([]mongo.WriteModel, 0)
 
-func CreateSchedule(schedules []schedule.ScheduleData){
-	updateOperation := make([]mongo.WriteModel , 0)
-
-	for _,schedule := range schedules {
+	for _, schedule := range schedules {
 		scheduleOperation := mongo.NewUpdateOneModel()
 
 		scheduleOperation.SetFilter(bson.M{"scheduleId": schedule.ScheduleId})
@@ -49,26 +48,26 @@ func CreateSchedule(schedules []schedule.ScheduleData){
 		updateOperation = append(updateOperation, scheduleOperation)
 	}
 
-	_,err := scheduleCollection.BulkWrite(context.TODO(), updateOperation)
+	_, err := scheduleCollection.BulkWrite(context.TODO(), updateOperation)
 
-	if err!=nil {
+	if err != nil {
 
 		log.Println(err)
 		return
 	}
 }
 
-func GetCurrentSchedule() ([]schedule.ResponseScheduleData, error) {
-	filter := bson.D{{"status", bson.D {{"$in", bson.A{constants.LIVE_STATUS, constants.UPCOMING_STATUS}}}}}
+func GetCurrentSchedule() ([]scheduleStruct.ResponseScheduleData, error) {
+	filter := bson.D{{"status", bson.D{{"$in", bson.A{constants.LIVE_STATUS, constants.UPCOMING_STATUS}}}}}
 
-	result,err := scheduleCollection.Find(context.TODO(), filter)
+	result, err := scheduleCollection.Find(context.TODO(), filter)
 
 	if err != nil {
 		log.Println(err)
-		return nil,err
+		return nil, err
 	}
 
-	var schedule []schedule.ResponseScheduleData
+	var schedule []scheduleStruct.ResponseScheduleData
 
 	err = result.All(context.TODO(), &schedule)
 	if err != nil {
@@ -76,5 +75,5 @@ func GetCurrentSchedule() ([]schedule.ResponseScheduleData, error) {
 		return nil, err
 	}
 
-	return schedule,nil
+	return schedule, nil
 }

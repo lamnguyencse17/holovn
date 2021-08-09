@@ -5,13 +5,13 @@ import (
 	"server/cmd/server/env"
 	"server/cmd/server/models/translationStore"
 	"server/cmd/server/redis"
-	"server/cmd/server/structure/room"
+	"server/cmd/server/structure/roomStruct"
 	"server/cmd/server/structure/translation"
 	"strconv"
 	"time"
 )
 
-func pollRoom(roomData room.RoomData) {
+func pollRoom(roomData roomStruct.RoomData) {
 	isPullingInstance := isGetTlInstance(roomData.Name)
 	defer log.Println("NOT LONGER EXIST")
 	for range time.Tick(time.Second * 20) {
@@ -32,7 +32,7 @@ func pollRoom(roomData room.RoomData) {
 	}
 }
 
-func handleAsGettingInstance(roomData room.RoomData) (newRoomData room.RoomData) {
+func handleAsGettingInstance(roomData roomStruct.RoomData) (newRoomData roomStruct.RoomData) {
 	fetchedTranslationStore, err := translationStore.GetTranslation(roomData.Name, roomData.LastTranslation)
 	if err != nil {
 		log.Println(err)
@@ -45,7 +45,7 @@ func handleAsGettingInstance(roomData room.RoomData) (newRoomData room.RoomData)
 	return UpdateRoomLastChat(roomData.Name, newestTimeStamp)
 }
 
-func handleAsPullingInstance(roomData room.RoomData, limit int) (newRoomData room.RoomData) {
+func handleAsPullingInstance(roomData roomStruct.RoomData, limit int) (newRoomData roomStruct.RoomData) {
 	chatData, err := GetTl(roomData.Name, limit)
 
 	if err != nil {
@@ -68,8 +68,8 @@ func handleAsPullingInstance(roomData room.RoomData, limit int) (newRoomData roo
 	return roomData
 }
 
-func announceNewData(roomData room.RoomData, chatData []translation.IAnnouncingTranslation) {
-	var newChatData room.UpdateTranslationData
+func announceNewData(roomData roomStruct.RoomData, chatData []translation.IAnnouncingTranslation) {
+	var newChatData roomStruct.UpdateTranslationData
 	newChatData.NewTranslation = chatData
 	for _, socket := range roomData.Sockets {
 		err := socket.WriteJSON(newChatData)
