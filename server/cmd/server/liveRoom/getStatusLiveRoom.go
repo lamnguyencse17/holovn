@@ -3,15 +3,16 @@ package liveRoom
 import (
 	"encoding/json"
 	"io/ioutil"
-	"net/http"
+	"server/cmd/server/httpClient"
 )
 
 type StatusType struct {
 	Status string `json:"status"`
 }
 
-func GetStatusLiveRoom(liveId string)(StatusType , error){
-	client := http.DefaultClient
+func GetStatusLiveRoom(liveId string) (StatusType, error) {
+	client := httpClient.GetHttpClient()
+	defer httpClient.DestroyHttpClient()
 	requestUrl := requestPrefix + liveId
 
 	response, err := client.Get(requestUrl)
