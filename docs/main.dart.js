@@ -16820,7 +16820,7 @@ a8q:function(){var s=0,r=P.X(t.z),q=1,p,o=[],n,m,l,k
 var $async$a8q=P.T(function(a,b){if(a===1){p=b
 s=q}while(true)switch(s){case 0:q=3
 s=6
-return P.a3($.acr().rO(0,"assets/.env"),$async$a8q)
+return P.a3($.acr().rO(0,"assets/.release.env"),$async$a8q)
 case 6:q=1
 s=5
 break

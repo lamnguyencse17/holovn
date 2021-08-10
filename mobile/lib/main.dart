@@ -3,10 +3,15 @@ import 'package:holovn_mobile/router/route_parser.dart';
 import 'package:holovn_mobile/router/router.dart';
 import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart';
 
 Future main() async {
   try {
-    await dotenv.load(fileName: "assets/.env");
+    if (kReleaseMode){
+      await dotenv.load(fileName: "assets/.release.env");
+    } else {
+      await dotenv.load(fileName: "assets/.env");
+    }
   } catch (err) {
     print(err);
   }
