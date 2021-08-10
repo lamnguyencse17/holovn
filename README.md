@@ -15,6 +15,8 @@ This project aims to provide a machine-translation based on community translatio
   - Golang
   - Redis
   - MongoDB
+- Github Pages: Flutter Web
+- Mobile App: Flutter
 
 
 ## Author
@@ -48,6 +50,8 @@ Dự án này được thực hiện nhằm cung cấp bản dịch tự động
   - Golang
   - Redis
   - MongoDB
+- Github Pages: Flutter Web
+- Mobile App: Flutter
 
 
 ## Tác giả
