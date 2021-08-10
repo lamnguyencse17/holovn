@@ -3,13 +3,10 @@ import 'package:holovn_mobile/router/route_parser.dart';
 import 'package:holovn_mobile/router/router.dart';
 import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter/services.dart' show rootBundle;
 
 Future main() async {
   try {
-    // print(await rootBundle.loadString('assets/.env'));
     await dotenv.load(fileName: "assets/.env");
-    // print(dotenv.env["HOLOVN_SERVER"]);
   } catch (err) {
     print(err);
   }
@@ -35,8 +32,18 @@ class _HolovnAppState extends State<HolovnApp> {
     return MaterialApp.router(
       title: "Holovn - A Vietnamese Hololive Fan App",
       theme: ThemeData.dark().copyWith(
-          // primaryColor: Colors.pinkAccent,
-          accentColor: Colors.pinkAccent),
+          brightness: Brightness.dark,
+          // primarySwatch: Colors.pink,
+          primaryColor: Colors.lightBlue,
+          accentColor: Colors.pink,
+          bottomAppBarColor: Colors.lightBlue,
+          dividerColor: Colors.pink,
+          focusColor: Colors.pink,
+          highlightColor: Colors.pink,
+          splashColor: Colors.pink,
+          secondaryHeaderColor: Colors.pink,
+          indicatorColor: Colors.pink,
+          toggleableActiveColor: Colors.pink),
       routeInformationParser: _routeInformationParser,
       routerDelegate: routerDelegate,
       backButtonDispatcher: RootBackButtonDispatcher(),
