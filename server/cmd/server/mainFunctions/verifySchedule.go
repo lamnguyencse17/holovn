@@ -7,6 +7,7 @@ import (
 	"server/cmd/server/httpClient"
 	"server/cmd/server/models/scheduleModel"
 	"server/cmd/server/structure/scheduleStruct"
+	"time"
 )
 
 func VerifySchedules() {
@@ -40,6 +41,13 @@ func VerifySchedules() {
 		log.Println(err)
 	}
 	scheduleModel.CreateSchedule(parsedBody.Items)
+}
+
+func VerifySchedulesRoutine() {
+	ticker := time.NewTicker(5 * time.Minute)
+	for _ = range ticker.C {
+		VerifySchedules()
+	}
 }
 
 type verifyResponse struct {

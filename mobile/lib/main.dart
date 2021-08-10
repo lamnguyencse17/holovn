@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:holovn_mobile/router/route_parser.dart';
 import 'package:holovn_mobile/router/router.dart';
 import 'package:get/get.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
-void main() {
+Future main() async {
+  try {
+    // print(await rootBundle.loadString('assets/.env'));
+    await dotenv.load(fileName: "assets/.env");
+    // print(dotenv.env["HOLOVN_SERVER"]);
+  } catch (err) {
+    print(err);
+  }
+
   runApp(HolovnApp());
 }
 
@@ -24,7 +34,9 @@ class _HolovnAppState extends State<HolovnApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: "Holovn - A Vietnamese Hololive Fan App",
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData.dark().copyWith(
+          // primaryColor: Colors.pinkAccent,
+          accentColor: Colors.pinkAccent),
       routeInformationParser: _routeInformationParser,
       routerDelegate: routerDelegate,
       backButtonDispatcher: RootBackButtonDispatcher(),

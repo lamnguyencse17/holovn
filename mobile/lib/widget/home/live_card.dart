@@ -6,8 +6,6 @@ class LiveCard extends StatelessWidget {
   final Schedule schedule;
   LiveCard(this.schedule);
 
-
-
   Widget build(BuildContext context) {
     return Center(
       child: FractionallySizedBox(
@@ -17,10 +15,19 @@ class LiveCard extends StatelessWidget {
               children: [
                 new Expanded(
                     child: Image.network(
-                        "https://i.ytimg.com/vi/" +
-                            schedule.id +
-                            "/sddefault_live.jpg",
-                        fit: BoxFit.fitWidth)),
+                  "https://i.ytimg.com/vi/" +
+                      schedule.id +
+                      "/sddefault.jpg",
+                  fit: BoxFit.fitWidth,
+                  // errorBuilder: (BuildContext context, Object exception,
+                  //     StackTrace? stackTrace) {
+                  //   return Image.network(
+                  //       "https://i.ytimg.com/vi/" +
+                  //           schedule.id +
+                  //           "/sddefault.jpg",
+                  //       fit: BoxFit.fitWidth);
+                  // },
+                )),
                 LiveCardDescription(schedule)
               ],
             ),
