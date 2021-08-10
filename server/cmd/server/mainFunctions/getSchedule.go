@@ -1,4 +1,4 @@
-package main
+package mainFunctions
 
 import (
 	"encoding/json"
@@ -15,7 +15,7 @@ const requestSchedulePostfix = "/live?lang=en&max_upcoming_hours=48&org=Hololive
 
 var apiKey = env.ReadEnv("HolodexKey")
 
-func getSchedule() ([]scheduleStruct.ScheduleData, error) {
+func GetSchedule() ([]scheduleStruct.ScheduleData, error) {
 	client := http.Client{}
 	requestUrl := requestSchedulePrefix + requestSchedulePostfix
 	request, _ := http.NewRequest("GET", requestUrl, nil)
@@ -45,9 +45,9 @@ func getSchedule() ([]scheduleStruct.ScheduleData, error) {
 	return parsedBody, nil
 }
 
-func loopGetSchedule() {
+func LoopGetSchedule() {
 	ticker := time.NewTicker(5 * time.Minute)
 	for _ = range ticker.C {
-		getSchedule()
+		GetSchedule()
 	}
 }

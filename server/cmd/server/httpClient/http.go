@@ -15,6 +15,9 @@ func CreateHttpClient() *http.Client {
 }
 
 func GetHttpClient() *http.Client {
+	if client == nil {
+		return CreateHttpClient()
+	}
 	return client
 }
 
