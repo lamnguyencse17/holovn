@@ -3,8 +3,9 @@ package test
 import (
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/h2non/gock.v1"
-	"io/ioutil"
+	"log"
 	"server/cmd/server/httpClient"
+	"server/cmd/server/liveRoom"
 	"testing"
 )
 
@@ -16,10 +17,12 @@ func TestGetLiveStatus(t *testing.T) {
 	client := httpClient.CreateHttpClient()
 	gock.InterceptClient(client)
 	// TEST
-	res, _ := client.Get("https://holodex.net/api/v2/videos/" + liveId)
-	body, _ := ioutil.ReadAll(res.Body)
+	statusType, err := liveRoom.GetStatusLiveRoom(liveId)
 
-	assert.Equal(t,  `{"status":"past"}`,string(body)[:17])
-	assert.Equal(t, "200 OK", res.Status)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	assert.Equal(t,  "past",statusType.Status)
 	assert.Equal(t, true, gock.IsDone())
 }
