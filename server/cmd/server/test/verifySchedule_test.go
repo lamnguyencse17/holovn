@@ -32,7 +32,7 @@ func TestVerifySchedule(t *testing.T) {
 
 	modifiedLiveSlice = append(modifiedLiveSlice, live)
 	mockResponse := verifyResponse{Items: modifiedLiveSlice, Total: "1"}
-	gock.New("https://holodex.net/api/v2/live?lang=all&sort=available_at&order=desc&limit=100&offset=0&paginated=%3Cempty%3E&id=" + liveId).Reply(200).JSON(mockResponse)
+	gock.New("https://holodex.net/api/v2/live?status=past%2C%20missing&lang=all&sort=available_at&order=desc&limit=100&offset=0&paginated=%3Cempty%3E&id=" + liveId).Reply(200).JSON(mockResponse)
 	defer gock.Off()
 	client := httpClient.CreateHttpClient()
 	gock.InterceptClient(client)

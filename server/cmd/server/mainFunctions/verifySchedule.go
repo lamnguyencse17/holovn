@@ -21,25 +21,28 @@ func VerifySchedules() {
 	}
 	client := httpClient.GetHttpClient()
 	defer httpClient.DestroyHttpClient()
-	response, err := client.Get("https://holodex.net/api/v2/live?lang=all&sort=available_at&order=desc&limit=100&offset=0&paginated=%3Cempty%3E&id=" + liveIdParams)
+	response, err := client.Get("https://holodex.net/api/v2/live?status=past%2C%20missing&lang=all&sort=available_at&order=desc&limit=100&offset=0&paginated=%3Cempty%3E&id=" + liveIdParams)
 	if err != nil {
+		log.Println(err)
 		return
 	}
-
 	var parsedBody verifyResponse
 	if err != nil {
 		log.Println(err)
+		return
 	}
 	body, err := ioutil.ReadAll(response.Body)
-	log.Println(body)
 	defer response.Body.Close()
 
 	if err != nil {
 		log.Println(err)
+		return
 	}
 	err = json.Unmarshal(body, &parsedBody)
+	log.Println(parsedBody)
 	if err != nil {
 		log.Println(err)
+		return
 	}
 	scheduleModel.CreateSchedule(parsedBody.Items)
 }
