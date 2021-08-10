@@ -7,9 +7,7 @@ import 'package:flutter/foundation.dart';
 
 Future main() async {
   try {
-    if (kReleaseMode){
-      await dotenv.load(fileName: "assets/.release.env");
-    } else {
+    if (!kReleaseMode){
       await dotenv.load(fileName: "assets/.env");
     }
   } catch (err) {
