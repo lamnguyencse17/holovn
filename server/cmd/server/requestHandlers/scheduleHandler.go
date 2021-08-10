@@ -6,14 +6,14 @@ import (
 	"server/cmd/server/constants"
 	"server/cmd/server/env"
 	"server/cmd/server/models"
-	"server/cmd/server/models/schedule"
+	"server/cmd/server/models/scheduleModel"
 )
 
 var database = env.ReadEnv("DatabaseName")
 var scheduleCollection = models.GetMongoClient().Database(database).Collection("schedules")
 
-func HandleGetCurrentSchedule(c *gin.Context){
-	scheduleData, err:= schedule.GetCurrentSchedule()
+func HandleGetCurrentSchedule(c *gin.Context) {
+	scheduleData, err := scheduleModel.GetCurrentSchedule()
 
 	if err != nil {
 		c.String(http.StatusBadRequest, constants.ERROR_HANDLING)
@@ -21,6 +21,3 @@ func HandleGetCurrentSchedule(c *gin.Context){
 
 	c.JSON(http.StatusOK, scheduleData)
 }
-
-
-

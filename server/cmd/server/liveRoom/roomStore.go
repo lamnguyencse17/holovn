@@ -2,7 +2,7 @@ package liveRoom
 
 import (
 	"log"
-	"server/cmd/server/structure/room"
+	"server/cmd/server/structure/roomStruct"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -10,14 +10,14 @@ import (
 
 type IRoomStore struct {
 	mu        sync.Mutex
-	store     map[string]room.RoomData
+	store     map[string]roomStruct.RoomData
 	emptyRoom []string
 }
 
 var Room IRoomStore
 
 func InitRoomStore() {
-	Room = IRoomStore{store: make(map[string]room.RoomData), emptyRoom: make([]string, 0)}
+	Room = IRoomStore{store: make(map[string]roomStruct.RoomData), emptyRoom: make([]string, 0)}
 }
 
 func RemoveRoom(name string) {
@@ -58,13 +58,13 @@ func LeaveAllRoom(conn *websocket.Conn) {
 	Room.mu.Unlock()
 }
 
-func AddRoom(roomData room.RoomData) {
+func AddRoom(roomData roomStruct.RoomData) {
 	Room.mu.Lock()
 	Room.store[roomData.Name] = roomData
 	Room.mu.Unlock()
 }
 
-func UpdateRoomLastChat(name string, lastChat int64) room.RoomData {
+func UpdateRoomLastChat(name string, lastChat int64) roomStruct.RoomData {
 	Room.mu.Lock()
 	selectedRoom := Room.store[name]
 	selectedRoom.LastTranslation = lastChat

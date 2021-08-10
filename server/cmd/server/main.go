@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"server/cmd/server/eventStore"
 	"server/cmd/server/liveRoom"
@@ -12,6 +13,7 @@ import (
 
 func initGin(quit chan bool) {
 	r := gin.Default()
+	r.Use(cors.Default())
 	routers.RunGinRouter(r)
 	err := r.Run()
 	if err != nil {

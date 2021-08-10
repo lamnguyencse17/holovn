@@ -8,27 +8,27 @@ import (
 	"server/cmd/server/constants"
 	"server/cmd/server/env"
 	"server/cmd/server/models"
-	schedule2 "server/cmd/server/models/schedule"
+	schedule2 "server/cmd/server/models/scheduleModel"
 	"server/cmd/server/structure/channel"
-	"server/cmd/server/structure/schedule"
+	"server/cmd/server/structure/scheduleStruct"
 	"testing"
 )
 
 var database = env.ReadEnv("DatabaseName")
 var scheduleCollection = models.GetMongoClient().Database(database).Collection("schedules")
 
-func TestInsertScheduleHandler (t *testing.T) {
+func TestInsertScheduleHandler(t *testing.T) {
 	scheduleId := "test_scheduleId"
 	prepTestInsertScheduleData(scheduleId)
 	scheduleResult := getSavedSchedule(scheduleId)
 
 	assert.Equal(t, scheduleResult.ScheduleId, scheduleId)
 	assert.Equal(t, scheduleResult.Status, "live")
-	assert.Equal(t, scheduleResult.Title,"TestScheduleInsertTitle" )
+	assert.Equal(t, scheduleResult.Title, "TestScheduleInsertTitle")
 	assert.Equal(t, scheduleResult.Channel.ChannelId, "ChannelHolo")
 }
 
-func TestUpdateMatchScheduleHandler (t *testing.T) {
+func TestUpdateMatchScheduleHandler(t *testing.T) {
 	scheduleId := "test_scheduleId"
 	prepTestUpdateScheduleData(scheduleId)
 
@@ -36,20 +36,20 @@ func TestUpdateMatchScheduleHandler (t *testing.T) {
 
 	assert.Equal(t, scheduleResult.ScheduleId, scheduleId)
 	assert.Equal(t, scheduleResult.Status, "stream")
-	assert.Equal(t, scheduleResult.Title,"TestScheduleUpdateTitle" )
+	assert.Equal(t, scheduleResult.Title, "TestScheduleUpdateTitle")
 	assert.Equal(t, scheduleResult.Channel.ChannelId, "ChannelHolo")
 
 	deleteSavedSchedule(scheduleId)
 }
 
-func TestGetCurrentScheduleHandler(t *testing.T){
+func TestGetCurrentScheduleHandler(t *testing.T) {
 	assert.Condition(t, checkCurrentStatus, "Found wrong status")
 }
 
 func checkCurrentStatus() bool {
 	scheduleData, _ := schedule2.GetCurrentSchedule()
 
-	for _, schedule:=range scheduleData {
+	for _, schedule := range scheduleData {
 		if schedule.Status != constants.LIVE_STATUS && schedule.Status != constants.UPCOMING_STATUS {
 			return false
 		}
@@ -58,19 +58,19 @@ func checkCurrentStatus() bool {
 	return true
 }
 
-func createTestSchedule(newSchedule schedule.ScheduleData) {
-	scheduleData := make([]schedule.ScheduleData, 0)
+func createTestSchedule(newSchedule scheduleStruct.ScheduleData) {
+	scheduleData := make([]scheduleStruct.ScheduleData, 0)
 
 	scheduleData = append(scheduleData, newSchedule)
 
 	schedule2.CreateSchedule(scheduleData)
 }
 
-func  getSavedSchedule(scheduleId string) schedule.ResponseScheduleData {
+func getSavedSchedule(scheduleId string) scheduleStruct.ResponseScheduleData {
 
-	findFilter := bson.M{"scheduleId": scheduleId }
+	findFilter := bson.M{"scheduleId": scheduleId}
 
-	var result schedule.ResponseScheduleData
+	var result scheduleStruct.ResponseScheduleData
 
 	err := scheduleCollection.FindOne(context.TODO(), findFilter).Decode(&result)
 
@@ -81,47 +81,46 @@ func  getSavedSchedule(scheduleId string) schedule.ResponseScheduleData {
 	return result
 }
 
-func deleteSavedSchedule (scheduleId string) {
-	deleteFilter := bson.M{"scheduleId": scheduleId }
-	_,err := scheduleCollection.DeleteOne(context.TODO(), deleteFilter)
+func deleteSavedSchedule(scheduleId string) {
+	deleteFilter := bson.M{"scheduleId": scheduleId}
+	_, err := scheduleCollection.DeleteOne(context.TODO(), deleteFilter)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func prepTestInsertScheduleData(scheduleId string){
-	newSchedule := schedule.ScheduleData{
-		ScheduleId: scheduleId,
-		Title: "TestScheduleInsertTitle",
-		PublishedAt:"2021-08-02T07:49:21.000Z",
-		AvailableAt: "2021-08-02T07:49:21.000Z",
-		Duration: 0,
-		Status: "live",
-		Channel: channel.ChannelData{
-			ChannelId: "ChannelHolo",
-			Name: "ChannelName",
-			Org: "Holovn",Type: "",
-			Photo: "",
-			EnglishName: "",
-		}}
-	createTestSchedule(newSchedule)
-}
-
-func prepTestUpdateScheduleData(scheduleId string){
-	newSchedule := schedule.ScheduleData{
-		ScheduleId: scheduleId,
-		Title: "TestScheduleUpdateTitle",
+func prepTestInsertScheduleData(scheduleId string) {
+	newSchedule := scheduleStruct.ScheduleData{
+		ScheduleId:  scheduleId,
+		Title:       "TestScheduleInsertTitle",
 		PublishedAt: "2021-08-02T07:49:21.000Z",
 		AvailableAt: "2021-08-02T07:49:21.000Z",
-		Duration: 0,
-		Status: "stream",
+		Duration:    0,
+		Status:      "live",
 		Channel: channel.ChannelData{
 			ChannelId: "ChannelHolo",
-			Name: "ChannelName",
-			Org: "Holovn",Type: "",
-			Photo: "",
+			Name:      "ChannelName",
+			Org:       "Holovn", Type: "",
+			Photo:       "",
 			EnglishName: "",
 		}}
 	createTestSchedule(newSchedule)
 }
 
+func prepTestUpdateScheduleData(scheduleId string) {
+	newSchedule := scheduleStruct.ScheduleData{
+		ScheduleId:  scheduleId,
+		Title:       "TestScheduleUpdateTitle",
+		PublishedAt: "2021-08-02T07:49:21.000Z",
+		AvailableAt: "2021-08-02T07:49:21.000Z",
+		Duration:    0,
+		Status:      "stream",
+		Channel: channel.ChannelData{
+			ChannelId: "ChannelHolo",
+			Name:      "ChannelName",
+			Org:       "Holovn", Type: "",
+			Photo:       "",
+			EnglishName: "",
+		}}
+	createTestSchedule(newSchedule)
+}

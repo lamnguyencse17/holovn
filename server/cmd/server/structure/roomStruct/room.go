@@ -1,4 +1,4 @@
-package room
+package roomStruct
 
 import (
 	"github.com/gorilla/websocket"

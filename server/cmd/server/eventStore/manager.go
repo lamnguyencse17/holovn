@@ -7,7 +7,7 @@ import (
 )
 
 func PollEvents(liveChannel chan eventStruct.ChannelEvent) {
-	for range time.Tick(time.Millisecond * 100) {
+	for range time.Tick(time.Millisecond * 200) {
 		drainedStore := Store.DrainEvent()
 		if len(drainedStore) != 0 {
 			log.Println("EVENT QUEUED")

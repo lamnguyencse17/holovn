@@ -2,11 +2,11 @@ package liveRoom
 
 import (
 	"github.com/gorilla/websocket"
-	"server/cmd/server/structure/room"
+	"server/cmd/server/structure/roomStruct"
 )
 
-func CreateRoom(name string, socket *websocket.Conn) room.RoomData {
-	var newChannel room.RoomData
+func CreateRoom(name string, socket *websocket.Conn) roomStruct.RoomData {
+	var newChannel roomStruct.RoomData
 	newChannel.Sockets = append(newChannel.Sockets, socket)
 	newChannel.Connections = 1
 	newChannel.Name = name
