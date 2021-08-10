@@ -21,7 +21,7 @@ func VerifySchedules() {
 	}
 	client := httpClient.GetHttpClient()
 	defer httpClient.DestroyHttpClient()
-	response, err := client.Get("https://holodex.net/api/v2/videos?lang=all&sort=available_at&order=desc&limit=100&offset=0&paginated=%3Cempty%3E&id=" + liveIdParams)
+	response, err := client.Get("https://holodex.net/api/v2/live?lang=all&sort=available_at&order=desc&limit=100&offset=0&paginated=%3Cempty%3E&id=" + liveIdParams)
 	if err != nil {
 		return
 	}
@@ -31,6 +31,7 @@ func VerifySchedules() {
 		log.Println(err)
 	}
 	body, err := ioutil.ReadAll(response.Body)
+	log.Println(body)
 	defer response.Body.Close()
 
 	if err != nil {

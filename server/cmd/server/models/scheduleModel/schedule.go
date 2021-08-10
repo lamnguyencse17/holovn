@@ -26,40 +26,24 @@ func CreateSchedule(schedules []scheduleStruct.ScheduleData) {
 
 		startScheduled, _ := util.ConvertTimeStringToDate(schedule.StartScheduled)
 		availableAt, _ := util.ConvertTimeStringToDate(schedule.AvailableAt)
-		if schedule.PublishedAt != "" {
-			publishedAt, _ := util.ConvertTimeStringToDate(schedule.PublishedAt)
-			scheduleOperation.SetUpdate(bson.D{
-				{"$set",
-					bson.D{
-						{"lastUpdated", time.Now()},
-						{"scheduleId", schedule.ScheduleId},
-						{"title", schedule.Title},
-						{"publishedAt", publishedAt},
-						{"availableAt", availableAt},
-						{"startScheduled", startScheduled},
-						{"duration", schedule.Duration},
-						{"status", schedule.Status},
-						{"channel", schedule.Channel},
-					},
-				},
-			})
-		} else {
-			scheduleOperation.SetUpdate(bson.D{
-				{"$set",
-					bson.D{
-						{"lastUpdated", time.Now()},
-						{"scheduleId", schedule.ScheduleId},
-						{"title", schedule.Title},
-						{"availableAt", availableAt},
-						{"startScheduled", startScheduled},
-						{"duration", schedule.Duration},
-						{"status", schedule.Status},
-						{"channel", schedule.Channel},
-					},
-				},
-			})
-		}
 
+		publishedAt, _ := util.ConvertTimeStringToDate(schedule.PublishedAt)
+		scheduleOperation.SetUpdate(bson.D{
+			{"$set",
+				bson.D{
+					{"lastUpdated", time.Now()},
+					{"scheduleId", schedule.ScheduleId},
+					{"title", schedule.Title},
+					{"publishedAt", publishedAt},
+					{"availableAt", availableAt},
+					{"startScheduled", startScheduled},
+					{"duration", schedule.Duration},
+					{"status", schedule.Status},
+					{"channel", schedule.Channel},
+				},
+			},
+		})
+		
 		scheduleOperation.SetUpsert(true)
 
 		updateOperation = append(updateOperation, scheduleOperation)
