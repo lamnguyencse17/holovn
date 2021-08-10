@@ -9,11 +9,12 @@ import (
 type StatusType struct {
 	Status string `json:"status"`
 }
+const requestStatusLivePrefix = "https://holodex.net/api/v2/videos/"
 
 func GetStatusLiveRoom(liveId string) (StatusType, error) {
 	client := httpClient.GetHttpClient()
 	defer httpClient.DestroyHttpClient()
-	requestUrl := requestPrefix + liveId
+	requestUrl := requestStatusLivePrefix + liveId
 
 	response, err := client.Get(requestUrl)
 
