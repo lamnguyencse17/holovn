@@ -27,12 +27,15 @@ class HomeLayoutBuilder extends StatelessWidget {
           width: constraints.maxWidth,
             height: constraints.maxHeight,
             child: DefaultTabController(
-                length: 2,
+                length: 3,
                 child: ListView(
                   children: [
                     TabBar(tabs: [
                       Tab(
                         text: "Live",
+                      ),
+                      Tab(
+                        text: "Upcoming",
                       ),
                       Tab(
                         text: "Past",
@@ -42,12 +45,8 @@ class HomeLayoutBuilder extends StatelessWidget {
                       width: constraints.maxWidth * 0.9,
                       height: constraints.maxHeight,
                       child: TabBarView(children: [
-                        GridView.count(
-                            crossAxisCount: count,
-                            children: _scheduleList
-                                .map<Widget>((schedule) =>
-                                    Container(child: new LiveCard(schedule)))
-                                .toList()),
+                        filteredLiveGridView(count, _scheduleList, "live"),
+                        filteredLiveGridView(count, _scheduleList, "upcoming"),
                         Container(
                           child: Text("PENDING"),
                         )
@@ -55,5 +54,14 @@ class HomeLayoutBuilder extends StatelessWidget {
                     )
                   ],
                 ))));
+  }
+
+  Widget filteredLiveGridView(int count, List<Schedule> _scheduleList, String status){
+    return GridView.count(
+        crossAxisCount: count,
+        children: _scheduleList.where((schedule) => schedule.status == status)
+            .map<Widget>((schedule) =>
+            Container(child: new LiveCard(schedule)))
+            .toList());
   }
 }
