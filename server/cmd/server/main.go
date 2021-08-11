@@ -15,5 +15,6 @@ func main() {
 	go eventStore.PollEvents(liveChannel)
 	go liveRoom.ManageRoom(liveChannel)
 	go mainFunctions.LoopGetSchedule()
+	go mainFunctions.VerifySchedulesRoutine()
 	<-ginChannel
 }

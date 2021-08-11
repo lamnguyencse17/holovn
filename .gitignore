@@ -4,3 +4,7 @@ server/.idea/
 
 
 server/cmd/server/server.exe
+
+mobile/assets/.env
+
+docs/assets/assets/.env

@@ -26,8 +26,8 @@ func CreateSchedule(schedules []scheduleStruct.ScheduleData) {
 
 		startScheduled, _ := util.ConvertTimeStringToDate(schedule.StartScheduled)
 		availableAt, _ := util.ConvertTimeStringToDate(schedule.AvailableAt)
-		publishedAt, _ := util.ConvertTimeStringToDate(schedule.PublishedAt)
 
+		publishedAt, _ := util.ConvertTimeStringToDate(schedule.PublishedAt)
 		scheduleOperation.SetUpdate(bson.D{
 			{"$set",
 				bson.D{
@@ -43,6 +43,7 @@ func CreateSchedule(schedules []scheduleStruct.ScheduleData) {
 				},
 			},
 		})
+		
 		scheduleOperation.SetUpsert(true)
 
 		updateOperation = append(updateOperation, scheduleOperation)

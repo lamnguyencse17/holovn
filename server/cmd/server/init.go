@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"server/cmd/server/eventStore"
 	"server/cmd/server/liveRoom"
-	"server/cmd/server/mainFunctions"
 	"server/cmd/server/models"
 	"server/cmd/server/redis"
 	"server/cmd/server/routers"
@@ -16,7 +15,6 @@ func initServer() {
 	models.InitMongoDb()
 	eventStore.InitStore()
 	liveRoom.InitRoomStore()
-	mainFunctions.VerifySchedules()
 }
 
 func initGin(quit chan bool) {

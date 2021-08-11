@@ -13,14 +13,13 @@ import (
 	"server/cmd/server/structure/channel"
 	"server/cmd/server/structure/scheduleStruct"
 	"testing"
-	"time"
 )
 
 func TestVerifySchedule(t *testing.T) {
 	// SETUP
 	// INITIAL DATA
 	liveId := "live_status_test"
-	timeValue := time.Now().String()
+	timeValue := "2021-08-09T13:07:31Z"
 	channelData := channel.ChannelData{ChannelId: "testChannel", Name: "channel", Org: "Holotest", Type: "vtuber", Photo: "nah", EnglishName: ""}
 	live := scheduleStruct.ScheduleData{ScheduleId: liveId, Title: "testTitle", Type: "live", PublishedAt: timeValue, AvailableAt: timeValue, StartScheduled: timeValue, Duration: 0, Status: constants.UPCOMING_STATUS, Channel: channelData}
 	var liveSlice []scheduleStruct.ScheduleData
@@ -30,23 +29,23 @@ func TestVerifySchedule(t *testing.T) {
 	// MODIFIED FOR MOCKING
 	live.Status = constants.PAST_STATUS
 	var modifiedLiveSlice []scheduleStruct.ScheduleData
+
 	modifiedLiveSlice = append(modifiedLiveSlice, live)
 	mockResponse := verifyResponse{Items: modifiedLiveSlice, Total: "1"}
-	gock.New("https://holodex.net/api/v2/videos?lang=all&sort=available_at&order=desc&limit=100&offset=0&paginated=%3Cempty%3E&id=" + liveId).Reply(200).JSON(mockResponse)
+	gock.New("https://holodex.net/api/v2/live?status=past%2C%20missing&lang=all&sort=available_at&order=desc&limit=100&offset=0&paginated=%3Cempty%3E&id=" + liveId).Reply(200).JSON(mockResponse)
 	defer gock.Off()
 	client := httpClient.CreateHttpClient()
 	gock.InterceptClient(client)
 	// TEST
 	mainFunctions.VerifySchedules()
 	findFilter := bson.M{"scheduleId": liveId}
-
 	var result scheduleStruct.ResponseScheduleData
 	err := scheduleCollection.FindOne(context.TODO(), findFilter).Decode(&result)
 	if err != nil {
 		t.FailNow()
 	}
-	assert.Equal(t, "past", result.Status)
 	assert.Equal(t, liveId, result.ScheduleId)
+	assert.Equal(t, constants.PAST_STATUS, result.Status)
 	// CLEANUP
 	deleteFilter := bson.M{"scheduleId": liveId}
 	_, err = scheduleCollection.DeleteOne(context.TODO(), deleteFilter)
