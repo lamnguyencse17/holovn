@@ -26,6 +26,8 @@ func TestInsertScheduleHandler(t *testing.T) {
 	assert.Equal(t, scheduleResult.Status, "live")
 	assert.Equal(t, scheduleResult.Title, "TestScheduleInsertTitle")
 	assert.Equal(t, scheduleResult.Channel.ChannelId, "ChannelHolo")
+
+	deleteSavedSchedule(scheduleId)
 }
 
 func TestUpdateMatchScheduleHandler(t *testing.T) {
