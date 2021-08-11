@@ -4,7 +4,8 @@ import 'package:holovn_mobile/widget/home/live_card.dart';
 
 class HomeLayoutBuilder extends StatelessWidget {
   final List<Schedule> scheduleList;
-  HomeLayoutBuilder(this.scheduleList);
+  final Future<void> Function() refreshSchedules;
+  HomeLayoutBuilder(this.scheduleList, this.refreshSchedules);
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +46,8 @@ class HomeLayoutBuilder extends StatelessWidget {
                       width: constraints.maxWidth * 0.9,
                       height: constraints.maxHeight,
                       child: TabBarView(children: [
-                        filteredLiveGridView(count, _scheduleList, "live"),
-                        filteredLiveGridView(count, _scheduleList, "upcoming"),
+                        filteredLiveGridView(count, _scheduleList, "live", refreshSchedules),
+                        filteredLiveGridView(count, _scheduleList, "upcoming", refreshSchedules),
                         Container(
                           child: Text("PENDING"),
                         )
@@ -56,12 +57,14 @@ class HomeLayoutBuilder extends StatelessWidget {
                 ))));
   }
 
-  Widget filteredLiveGridView(int count, List<Schedule> _scheduleList, String status){
-    return GridView.count(
+  Widget filteredLiveGridView(int count, List<Schedule> _scheduleList, String status, Future<void> Function() refreshSchedules){
+    return RefreshIndicator(child: GridView.count(
         crossAxisCount: count,
         children: _scheduleList.where((schedule) => schedule.status == status)
             .map<Widget>((schedule) =>
             Container(child: new LiveCard(schedule)))
-            .toList());
+            .toList()),
+        onRefresh: refreshSchedules);
+
   }
 }

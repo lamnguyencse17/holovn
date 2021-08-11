@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:holovn_mobile/models/schedule.dart';
 import 'package:holovn_mobile/router/router.dart';
 import 'package:holovn_mobile/widget/live/player.dart';
-import 'package:holovn_mobile/widget/live/youtube_mobile_player.dart';
 
 class Live extends StatefulWidget {
   final Schedule? schedule;
@@ -37,7 +36,7 @@ class _LiveState extends State<Live> {
           title: Text(_schedule.title),
         ),
         body: ListView(
-          children: [Text(_schedule.title), Player(liveId!)],
+          children: [Text(_schedule.title), Player(liveId!, _schedule.status)],
         ),
       );
     }

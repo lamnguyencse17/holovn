@@ -4,6 +4,7 @@ import 'package:holovn_mobile/router/router.dart';
 import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
+import 'configure_nonweb.dart' if (dart.library.html) 'configure_web.dart';
 
 Future main() async {
   try {
@@ -13,7 +14,7 @@ Future main() async {
   } catch (err) {
     print(err);
   }
-
+  configureApp();
   runApp(HolovnApp());
 }
 
