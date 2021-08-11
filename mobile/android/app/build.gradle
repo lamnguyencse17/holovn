@@ -39,13 +39,31 @@ android {
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        signingConfig signingConfigs.debug
     }
 
+//    buildTypes {
+//        release {
+////            release {
+//                storeFile file(localProperties.getProperty('storeFile'))
+//                storePassword localProperties.getProperty('storePassword')
+//                keyAlias localProperties.getProperty('keyAlias')
+//                keyPassword localProperties.getProperty('keyPassword')
+////            }
+////            signingConfig signingConfigs.debug
+//        }
+//    }
+    signingConfigs {
+        release {
+            storeFile file(localProperties.getProperty('storeFile'))
+                storePassword localProperties.getProperty('storePassword')
+                keyAlias localProperties.getProperty('keyAlias')
+                keyPassword localProperties.getProperty('keyPassword')
+        }
+    }
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -56,4 +74,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.google.android.gms:play-services-vision:10.+'
 }
