@@ -39,7 +39,6 @@ func VerifySchedules() {
 		return
 	}
 	err = json.Unmarshal(body, &parsedBody)
-	log.Println(parsedBody)
 	if err != nil {
 		log.Println(err)
 		return

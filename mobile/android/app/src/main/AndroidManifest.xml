@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lamnguyencse17.holovn.mobile">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="mobile"
         android:icon="@mipmap/ic_launcher">
