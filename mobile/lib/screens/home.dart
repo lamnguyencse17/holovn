@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:holovn_mobile/models/schedule.dart';
 import 'package:holovn_mobile/providers/schedule.dart';
 import 'package:holovn_mobile/screens/home/home_layout_builder.dart';
+import 'package:holovn_mobile/widget/drawer_nav.dart';
 
 class HomePage extends StatefulWidget {
-
   HomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   _HomePageState();
   @override
-  void initState(){
+  void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
     refreshSchedules();
@@ -34,10 +34,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: DrawerNav(),
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: HomeLayoutBuilder(_scheduleList, refreshSchedules)
-    );
+        body: HomeLayoutBuilder(_scheduleList, refreshSchedules));
   }
 }
