@@ -65,6 +65,9 @@ github.com/klauspost/compress/fse
 github.com/klauspost/compress/huff0
 github.com/klauspost/compress/zstd
 github.com/klauspost/compress/zstd/internal/xxhash
+# github.com/lamnguyencse17/gocketio v0.0.0-20210817020826-2620a5db3a63
+## explicit
+github.com/lamnguyencse17/gocketio
 # github.com/leodido/go-urn v1.2.0
 github.com/leodido/go-urn
 # github.com/magiconair/properties v1.8.5
